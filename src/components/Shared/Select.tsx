@@ -14,9 +14,9 @@ const Select: FC<SelectProps> = ({
   );
   return (
     <select
-      {...rest}
-      {...formValidation?.register(formValidation.id, formValidation.options)}
       className={finalClassName}
+      {...formValidation?.register(formValidation.id, formValidation.options)}
+      {...rest}
     >
       {children}
     </select>

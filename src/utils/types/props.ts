@@ -1,6 +1,17 @@
 import React from 'react';
-import { FieldErrorsImpl, UseFormRegister } from 'react-hook-form';
-import { AvailableLanguages, ColorTheme, PartialProject, User } from '.';
+import {
+  FieldErrorsImpl,
+  UseFormRegister,
+  UseFormReset,
+  UseFormSetValue,
+} from 'react-hook-form';
+import {
+  AvailableLanguages,
+  ColorTheme,
+  PartialProject,
+  Project,
+  User,
+} from '.';
 
 type ChangeEvent = (e: React.ChangeEvent<any>) => unknown;
 
@@ -27,9 +38,9 @@ export type ThemeProviderProps = {
 };
 
 export type InputFieldProps = {
-  type?: 'text' | 'password' | 'email';
+  type?: string;
   formValidation?: FormFieldProps & {
-    id: 'email' | 'password' | 'name' | 'description';
+    id: string;
     options: any;
   };
   placeholder: string;
@@ -55,14 +66,13 @@ export type AppProvidersProps = {
 };
 
 export type Modals = {
-  createProject: {
-    show: boolean;
-    data?: any;
-  };
-  confirmDeletion: {
-    show: boolean;
-    data?: any;
-  };
+  createProject: ModalData;
+  confirmDeletion: ModalData;
+};
+
+export type ModalData = {
+  show: boolean;
+  data?: any;
 };
 
 export const defaultModalState: Modals = {
@@ -92,7 +102,7 @@ export type ContextMenuProps = {
 export type CodeEditorProps = {
   language: AvailableLanguages;
   code: string;
-  setProjectInfo: (prev: any) => unknown;
+  setValue: UseFormSetValue<ProjectInfo>;
 };
 
 export type ProjectInfo = {
@@ -104,11 +114,23 @@ export type ProjectInfo = {
 export type ProjectPageLayoutProps = {
   code: string;
   language: AvailableLanguages;
-  setProjectInfo: (prev: any) => unknown;
   children: React.ReactNode;
+  setValue: UseFormSetValue<ProjectInfo>;
 };
 
 export type EditDescriptionProps = {
+  setValue: UseFormSetValue<ProjectInfo>;
   description: string;
-  handleChange: ChangeEvent;
 };
+
+export type UseProjectProps = {
+  reset: UseFormReset<ProjectInfo>;
+};
+
+export type UseProjectReturnType = {
+  isLoading: boolean;
+  isError: boolean;
+  project?: Project;
+};
+
+export type UseProject = (data: UseProjectProps) => UseProjectReturnType;

@@ -6,7 +6,7 @@ import { getProjects } from '../../utils/api';
 import ModalContext from '../../utils/context/ModalContext';
 import { PartialProject } from '../../utils/types';
 import { Modals } from '../../utils/types/props';
-import ProjectCard from '../Projects/ProjectCard';
+import ProjectCard from '../Project/ProjectCard';
 import ContextMenu from '../Shared/ContextMenu';
 
 const ProjectsSection = () => {
@@ -59,7 +59,7 @@ const ProjectsSection = () => {
       ) : projects?.length === 0 ? (
         <h1 className='font-inter text-gray-500 tracking-wide'>No Projects!</h1>
       ) : (
-        <div className='w-full flex flex-col gap-10 overflow-y-auto items-center max-h-[300px] px-4'>
+        <div className='w-full flex flex-col gap-7 overflow-y-auto items-center max-h-[300px] px-4'>
           {projects?.map((project) => (
             <div
               key={project.id}

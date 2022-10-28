@@ -17,8 +17,8 @@ export type User = {
 };
 
 export enum AvailableLanguages {
-  PYTHON = 'python',
   JAVASCRIPT = 'javascript',
+  PYTHON = 'python',
 }
 
 export type PartialProject = {

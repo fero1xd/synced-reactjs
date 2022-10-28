@@ -1,25 +1,27 @@
-import { Routes, Route } from 'react-router-dom';
-import Landing from './pages/Landing';
-import Register from './pages/Register';
-import { useState } from 'react';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'semantic-ui-css/semantic.min.css';
+import { User } from './utils/types';
+import { Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
+import { ToastContainer } from 'react-toastify';
+import { AnimatePresence } from 'framer-motion';
+import { defaultModalState, Modals } from './utils/types/props';
+import AuthenticatedRoute from './components/Routes/AuthenticatedRoute';
+import Landing from './pages/Landing';
+import Register from './pages/Register';
 import AppCover from './components/AppCover/AppCover';
 import Login from './pages/Login';
-import { User } from './utils/types';
-import AuthenticatedRoute from './components/Routes/AuthenticatedRoute';
 import Home from './pages/Home';
 import PublicRoute from './components/Routes/PublicRoute';
 import ProjectPage from './pages/Projects/ProjectPage';
 import CreateProject from './components/Modals/CreateProject';
-import { AnimatePresence } from 'framer-motion';
-import { defaultModalState, Modals } from './utils/types/props';
 import ConfirmationModal from './components/Modals/ConfirmationModal';
 
 const App = () => {
   const [user, setUser] = useState<User>();
   const [modals, setModals] = useState<Modals>(defaultModalState);
+
+  const { createProject, confirmDeletion } = modals;
 
   return (
     <>
@@ -30,8 +32,8 @@ const App = () => {
         setModals={setModals}
       >
         <AnimatePresence>
-          {modals.createProject.show && <CreateProject />}
-          {modals.confirmDeletion.show && <ConfirmationModal />}
+          {createProject.show && <CreateProject />}
+          {confirmDeletion.show && <ConfirmationModal />}
         </AnimatePresence>
         <Routes>
           <Route element={<PublicRoute />}>

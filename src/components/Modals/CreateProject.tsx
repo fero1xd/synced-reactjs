@@ -2,6 +2,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import {
   CreateProjectParams,
   PartialProject,
+  Project,
   UpdateProjectParams,
 } from '../../utils/types';
 import Button from '../Shared/Button';
@@ -18,7 +19,7 @@ import { toast } from 'react-toastify';
 import useQueryWithRedirect from '../../hooks/useQueryWithRedirect';
 import { motion } from 'framer-motion';
 import Select from '../Shared/Select';
-import { toTitleCase } from '../../utils/helpers';
+import { convertToPartialProject, toTitleCase } from '../../utils/helpers';
 
 const CreateProject = () => {
   const {
@@ -86,14 +87,16 @@ const CreateProject = () => {
   const updateMutation = useMutation(
     (data: UpdateProjectParams) => updateProject(data),
     {
-      onSuccess: (data: UpdateProjectParams) => {
+      onSuccess: (data: Project) => {
+        const converted = convertToPartialProject(data);
+
         const projects = queryClient.getQueryData([
           'projects',
         ]) as PartialProject[];
 
         queryClient.setQueryData(
           ['projects'],
-          projects.map((pr) => (pr.id === project.id ? data : pr))
+          projects.map((pr) => (pr.id === project.id ? converted : pr))
         );
         toast.success('Project Updated Successfully');
         closeModal();
