@@ -45,3 +45,18 @@ export type UpdateProjectParams = {
   description?: string;
   code?: string;
 };
+
+export enum JobStatus {
+  PENDING = 'pending',
+  SUCCESS = 'success',
+  ERROR = 'error',
+}
+
+export type CompletedJob = {
+  id: string;
+  compiledAt: Date;
+  startedAt: Date;
+  submittedAt: Date;
+  status: JobStatus;
+  output: string;
+};

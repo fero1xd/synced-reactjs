@@ -72,7 +72,7 @@ const CreateProject = () => {
           'projects',
         ]) as PartialProject[];
 
-        projects.push(data);
+        projects.unshift(data);
 
         queryClient.setQueryData(['projects'], projects);
 

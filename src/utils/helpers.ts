@@ -14,3 +14,19 @@ export function convertToPartialProject(data: Project) {
     description: data.description,
   } as PartialProject;
 }
+
+function padTo2Digits(num: number) {
+  return num.toString().padStart(2, '0');
+}
+
+export function formatDate(date: Date) {
+  return (
+    [padTo2Digits(date.getHours()), padTo2Digits(date.getMinutes())].join(':') +
+    ' ' +
+    [
+      date.getFullYear(),
+      padTo2Digits(date.getMonth() + 1),
+      padTo2Digits(date.getDate()),
+    ].join('-')
+  );
+}

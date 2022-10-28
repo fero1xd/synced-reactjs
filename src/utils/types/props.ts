@@ -8,6 +8,7 @@ import {
 import {
   AvailableLanguages,
   ColorTheme,
+  CompletedJob,
   PartialProject,
   Project,
   User,
@@ -134,3 +135,7 @@ export type UseProjectReturnType = {
 };
 
 export type UseProject = (data: UseProjectProps) => UseProjectReturnType;
+
+export type JobSectionProps = {
+  lastJobRan?: CompletedJob;
+};
