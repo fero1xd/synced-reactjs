@@ -9,7 +9,7 @@ const Select: FC<SelectProps> = ({
   ...rest
 }) => {
   const finalClassName = twMerge(
-    'bg-white dark:bg-input w-full py-5 px-7 outline-none border-none focus:outline-primaryBtnHvr transition-all ease-in-out duration-500 rounded-sm',
+    'shadow-md bg-white dark:bg-input w-full py-5 px-7 outline-none border-none focus:outline-primaryBtnHvr transition-all ease-in-out duration-500 rounded-sm',
     className
   );
   return (

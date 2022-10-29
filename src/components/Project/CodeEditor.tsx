@@ -1,4 +1,4 @@
-import Editor, { Monaco, useMonaco } from '@monaco-editor/react';
+import Editor, { Monaco } from '@monaco-editor/react';
 import { useContext, useEffect, useRef } from 'react';
 import { Loader } from 'semantic-ui-react';
 import ThemeContext from '../../utils/context/ThemeContext';
@@ -12,7 +12,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
 }) => {
   const { theme } = useContext(ThemeContext);
   const editorRef = useRef<Monaco>();
-  const monaco = useMonaco();
 
   useEffect(() => {
     window.addEventListener('resize', handleResize);
@@ -28,11 +27,9 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     <Editor
       language={language}
       value={code}
-      onChange={debounce(
-        () =>
-          setValue('code', editorRef.current.getValue(), { shouldDirty: true }),
-        6000
-      )}
+      onChange={(val) => {
+        setValue('code', val || '', { shouldDirty: true });
+      }}
       theme={theme === 'light' ? 'vs-light' : 'vs-dark'}
       loading={<Loader active size='small' content='Loading Editor' />}
       onMount={(editor) => (editorRef.current = editor)}

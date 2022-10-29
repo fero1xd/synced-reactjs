@@ -1,4 +1,3 @@
-import { debounce } from 'debounce';
 import React, { useRef } from 'react';
 import { EditDescriptionProps } from '../../utils/types/props';
 
@@ -18,12 +17,11 @@ const EditDescription: React.FC<EditDescriptionProps> = ({
           maxLength={300}
           placeholder='Describe your project'
           className='placeholder:opacity-50 w-full bg-white dark:bg-input outline-none border-none h-full resize-none text-gray-400'
-          onChange={debounce(() => {
-            console.log(textAreaRef.current!.value);
-            setValue('description', textAreaRef.current!.value, {
+          onChange={(e) => {
+            setValue('description', e.target.value, {
               shouldDirty: true,
             });
-          }, 1500)}
+          }}
         />
       </div>
     </div>

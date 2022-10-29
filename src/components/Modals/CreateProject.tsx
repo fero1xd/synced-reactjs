@@ -130,12 +130,11 @@ const CreateProject = () => {
         className='w-[600px]'
       >
         <form
-          className='px-10 py-10 rounded-md bg-[#121212] flex flex-col gap-10 items-start justify-center relative'
+          className='px-10 py-10 rounded-md bg-[#f6f6f6] dark:bg-[#121212] flex flex-col gap-10 items-start justify-center relative'
           onSubmit={handleSubmit(onSubmit)}
         >
           <MdClose
-            className='absolute w-5 h-5 right-5 top-5 cursor-pointer'
-            color='#fff'
+            className='absolute w-5 h-5 right-5 top-5 cursor-pointer fill-black dark:fill-white'
             onClick={() => {
               setModals((prev: Modals) => {
                 return {
@@ -149,7 +148,7 @@ const CreateProject = () => {
           />
           <div className='w-full space-y-3'>
             <div className='w-full flex justify-between items-center'>
-              <h2 className='font-semibold text-white'>Name</h2>
+              <h2 className='font-semibold text-black dark:text-white'>Name</h2>
               {errors.name && (
                 <p className='text-sm text-red-500 mb-2'>
                   {errors.name.message}
@@ -179,7 +178,9 @@ const CreateProject = () => {
           </div>
           <div className='w-full space-y-3'>
             <div className='w-full flex justify-between items-center'>
-              <h2 className='font-semibold text-white'>Language</h2>
+              <h2 className='font-semibold text-black dark:text-white'>
+                Language
+              </h2>
               {errors.language && (
                 <p className='text-sm text-red-500 mb-2'>
                   {errors.language.message}
@@ -219,7 +220,9 @@ const CreateProject = () => {
           </div>
           <div className='w-full space-y-3'>
             <div className='w-full flex justify-between items-center'>
-              <h2 className='font-semibold text-white'>Description</h2>
+              <h2 className='font-semibold text-black dark:text-white'>
+                Description
+              </h2>
               {errors.description && (
                 <p className='text-sm text-red-500 mb-2'>
                   {errors.description.message}

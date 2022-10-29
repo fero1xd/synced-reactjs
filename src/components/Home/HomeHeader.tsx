@@ -14,7 +14,7 @@ const HomeHeader = () => {
     <>
       <h1 className='text-[40px] font-inter font-extrabold text-center drop-shadow-md tracking-[.15em] flex gap-4 flex-shrink-0'>
         Hello
-        <span className='text-red-500 underline underline-offset-8'>
+        <span className='underline text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-red-600'>
           {user?.name}
         </span>
       </h1>
@@ -47,7 +47,7 @@ const HomeHeader = () => {
         <Input placeholder='Search' className='w-full  rounded-xl' />
         <FaSearch className='w-9 h-9' cursor='pointer' />
       </div>
-      <div className='w-full mt-16 mb-16 border-[#1E1E1E] border-[.2px]'></div>
+      <div className='w-full mt-16 mb-16 dark:border-[#1E1E1E] border-[.2px]'></div>
     </>
   );
 };

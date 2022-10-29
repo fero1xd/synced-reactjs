@@ -56,10 +56,10 @@ const ConfirmationModal = () => {
         className='w-[400px] md:w-[600px] lg:w-[600px] absolute top-14 px-10 py-7 flex items-center justify-center text-center'
       >
         <div
-          className='px-10 py-7 rounded-md bg-[#121212] flex flex-col gap-6 md:flex-row
-         lg:flex-row items-center justify-between relative'
+          className='px-10 py-7 rounded-md bg-[#f6f6f6] dark:bg-[#121212] flex flex-col gap-6 md:flex-row
+         lg:flex-row items-center justify-between relative text-black dark:text-white'
         >
-          <h1 className='text-white text-md tracking-wider'>
+          <h1 className='text-md tracking-wider'>
             Are you sure ? This Action is{' '}
             <span className='text-red-400'>Irreversible!</span>
           </h1>
