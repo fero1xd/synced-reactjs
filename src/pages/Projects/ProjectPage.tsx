@@ -3,7 +3,8 @@ import { Loader } from 'semantic-ui-react';
 import { RiLogoutCircleFill } from 'react-icons/ri';
 import {
   AvailableLanguages,
-  CompletedJob,
+  Job,
+  JobStatus,
   Project,
   UpdateProjectParams,
 } from '../../utils/types';
@@ -17,11 +18,15 @@ import useProject from '../../hooks/useProject';
 import { useForm } from 'react-hook-form';
 import SaveProject from '../../components/Project/SaveProject';
 import { AnimatePresence } from 'framer-motion';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateProject } from '../../utils/api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  getLatestJob,
+  updateProject,
+  createJob as createJobApi,
+} from '../../utils/api';
 import useQueryWithRedirect from '../../hooks/useQueryWithRedirect';
 import JobSection from '../../components/Project/JobSection';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { SocketContext } from '../../utils/context/SocketContext';
 
 const ProjectPage = () => {
@@ -29,30 +34,44 @@ const ProjectPage = () => {
   const queryClient = useQueryClient();
   const socket = useContext(SocketContext);
 
-  // Temp: refer TODO.txt
-  const [lastJobRan, setLastJobRan] = useState<CompletedJob>();
-
-  useEffect(() => {
-    socket.off('onJobDone').on('onJobDone', (job: CompletedJob) => {
-      setLastJobRan({
-        ...job,
-        compiledAt: new Date(job.compiledAt),
-        startedAt: new Date(job.startedAt),
-        submittedAt: new Date(job.submittedAt),
-      });
-    });
-  }, [socket]);
-
+  // Form validation
   const { register, formState, reset, getValues, handleSubmit, setValue } =
     useForm<ProjectInfo>({
       reValidateMode: 'onBlur',
     });
 
+  // Extracting state from form hook
   const { code, language, description } = getValues();
   const { errors, isDirty } = formState;
 
+  // Fetching project
   const { isLoading, project } = useProject({ reset });
 
+  // Fetching latest job if any
+  const { isLoading: isJobLoading, data: lastJobRan } = useQuery(
+    ['job', project?.id],
+    () => getLatestJob(project!.id.toString()),
+    useQueryWithRedirect({
+      enabled: !!project?.id,
+      cacheTime: 0,
+      onSuccess: (data?: Job) => {
+        if (!data) {
+          return queryClient.setQueryData(['job', project?.id], null);
+        }
+        const { compiledAt, startedAt } = data;
+        const updated = {
+          ...data,
+          submittedAt: new Date(data.submittedAt),
+        };
+        if (compiledAt) updated.compiledAt = new Date(compiledAt);
+        if (startedAt) updated.startedAt = new Date(startedAt);
+
+        queryClient.setQueryData(['job', project?.id], updated);
+      },
+    })
+  );
+
+  // Update project mutation
   const updateMutation = useMutation(
     (data: UpdateProjectParams) => updateProject(data),
     {
@@ -68,12 +87,54 @@ const ProjectPage = () => {
     }
   );
 
+  const createMutation = useMutation((id: string) => createJobApi(id), {
+    onSuccess: (data: Job) => {
+      const updated = {
+        ...data,
+        submittedAt: new Date(data.submittedAt),
+      };
+
+      queryClient.setQueryData(['job', project?.id], updated);
+    },
+    ...useQueryWithRedirect(),
+  });
+
+  // Save project
   const saveProject = (data: ProjectInfo) => {
     if (!isDirty) return;
     updateMutation.mutateAsync({ id: project!.id.toString(), ...data });
   };
 
-  if (isLoading || !project) return <Loader active size='big' />;
+  // Listening for onJobDone event
+  useEffect(() => {
+    if (!project) return;
+
+    socket.on('onJobDone', (job: Job) => {
+      const { compiledAt, startedAt } = job;
+      const updated = {
+        ...job,
+        submittedAt: new Date(job.submittedAt),
+      };
+      if (compiledAt) updated.compiledAt = new Date(compiledAt);
+      if (startedAt) updated.startedAt = new Date(startedAt);
+
+      queryClient.setQueryData(['job', project?.id], updated);
+    });
+
+    return () => {
+      socket.off('onJobDone');
+    };
+  }, [socket, project]);
+
+  // Create job
+  const createJob = () => {
+    if (!project) return;
+
+    createMutation.mutateAsync(project.id.toString());
+  };
+
+  if (isLoading || !project || isJobLoading)
+    return <Loader active size='big' />;
 
   return (
     <>
@@ -117,7 +178,13 @@ const ProjectPage = () => {
 
             <div className='flex flex-col items-center justify-center gap-4 w-full'>
               <EditDescription setValue={setValue} description={description} />
-              <ActionSection />
+              <ActionSection
+                createJob={createJob}
+                disabled={
+                  createMutation.isLoading ||
+                  lastJobRan?.status === JobStatus.PENDING
+                }
+              />
             </div>
           </div>
         </div>

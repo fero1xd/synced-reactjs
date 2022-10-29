@@ -35,11 +35,16 @@ const JobSection: React.FC<JobSectionProps> = ({ lastJobRan }) => {
                   {formatDate(lastJobRan.submittedAt)}
                 </td>
                 <td className={tdClassname}>
-                  {formatDate(lastJobRan.startedAt)}
+                  {lastJobRan.startedAt
+                    ? formatDate(lastJobRan.startedAt)
+                    : '-'}
                 </td>
                 <td className={tdClassname}>
-                  {formatDate(lastJobRan.compiledAt)}
+                  {lastJobRan.compiledAt
+                    ? formatDate(lastJobRan.compiledAt)
+                    : '-'}
                 </td>
+
                 <td
                   className={twMerge(
                     tdClassname,
@@ -55,21 +60,33 @@ const JobSection: React.FC<JobSectionProps> = ({ lastJobRan }) => {
                 </td>
               </tr>
 
-              {/* <tr className='text-center divide-x-2 divide-[#1C1C1C] opacity-[80%]'>
-            <td
-              className={twMerge(
-                tdClassname,
-                'text-center text-link underline cursor-pointer opacity-[90%]'
-              )}
-              colSpan={5}
-            >
-              See More
-            </td>
-          </tr> */}
+              <tr className='text-center divide-x-2 divide-[#1C1C1C] opacity-[80%]'>
+                <td
+                  className={twMerge(
+                    tdClassname,
+                    'text-center text-link dark:text-link underline cursor-pointer opacity-[100%] py-5'
+                  )}
+                  colSpan={5}
+                >
+                  See All
+                </td>
+              </tr>
             </tbody>
           </>
         ) : (
-          <></>
+          <tbody className='divide-y-2 divide-[#1C1C1C]'>
+            <tr className='text-center divide-x-2 divide-[#1C1C1C] opacity-[80%]'>
+              <td
+                className={twMerge(
+                  tdClassname,
+                  'text-center opacity-[100%] py-5'
+                )}
+                colSpan={5}
+              >
+                No Jobs
+              </td>
+            </tr>
+          </tbody>
         )}
       </table>
     </div>

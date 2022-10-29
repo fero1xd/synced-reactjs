@@ -52,11 +52,11 @@ export enum JobStatus {
   ERROR = 'error',
 }
 
-export type CompletedJob = {
+export type Job = {
   id: string;
-  compiledAt: Date;
-  startedAt: Date;
   submittedAt: Date;
   status: JobStatus;
-  output: string;
+  output?: string;
+  startedAt?: Date;
+  compiledAt?: Date;
 };

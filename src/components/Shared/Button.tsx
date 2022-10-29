@@ -10,7 +10,9 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   const finalClassName = twMerge(
     `${
-      secondary ? 'bg-red-600' : 'bg-primaryBtn'
+      secondary
+        ? 'bg-red-600 disabled:bg-red-800'
+        : 'bg-primaryBtn disabled:bg-blue-800'
     } font-semibold px-14 py-4 rounded-md flex items-center relative text-white ${
       secondary ? 'hover:bg-red-800' : 'hover:bg-primaryBtnHvr'
     } transition-colors duration-700 drop-shadow-lg`,

@@ -8,7 +8,7 @@ import {
 import {
   AvailableLanguages,
   ColorTheme,
-  CompletedJob,
+  Job,
   PartialProject,
   Project,
   User,
@@ -137,5 +137,10 @@ export type UseProjectReturnType = {
 export type UseProject = (data: UseProjectProps) => UseProjectReturnType;
 
 export type JobSectionProps = {
-  lastJobRan?: CompletedJob;
+  lastJobRan?: Job;
+};
+
+export type ActionSectionProps = {
+  createJob: () => void;
+  disabled: boolean;
 };

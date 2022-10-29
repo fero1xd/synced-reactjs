@@ -1,4 +1,4 @@
-import Editor, { Monaco } from '@monaco-editor/react';
+import Editor, { Monaco, useMonaco } from '@monaco-editor/react';
 import { useContext, useEffect, useRef } from 'react';
 import { Loader } from 'semantic-ui-react';
 import ThemeContext from '../../utils/context/ThemeContext';
@@ -12,6 +12,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
 }) => {
   const { theme } = useContext(ThemeContext);
   const editorRef = useRef<Monaco>();
+  const monaco = useMonaco();
 
   useEffect(() => {
     window.addEventListener('resize', handleResize);
