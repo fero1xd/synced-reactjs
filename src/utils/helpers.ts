@@ -1,32 +1,69 @@
-import { PartialProject, Project } from './types';
+import {
+  ColorTheme,
+  PartialProject,
+  Project,
+  SetShowModalParams,
+} from './types';
+import { Modals } from './types/props';
 
-export function toTitleCase(str: string) {
+export const toTitleCase = (str: string) => {
   return str.replace(/\w\S*/g, function (txt) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
-}
+};
 
-export function convertToPartialProject(data: Project) {
-  return {
-    id: data.id,
-    name: data.name,
-    language: data.language,
-    description: data.description,
-  } as PartialProject;
-}
-
-function padTo2Digits(num: number) {
+const padTo2Digits = (num: number) => {
   return num.toString().padStart(2, '0');
-}
+};
 
-export function formatDate(date: Date) {
-  return (
-    [padTo2Digits(date.getHours()), padTo2Digits(date.getMinutes())].join(':') +
-    ' ' +
-    [
-      padTo2Digits(date.getDate()),
-      padTo2Digits(date.getMonth() + 1),
-      date.getFullYear(),
-    ].join('/')
-  );
-}
+export const formatDate = (date: Date, hideSeconds?: boolean) => {
+  return !hideSeconds
+    ? [padTo2Digits(date.getHours()), padTo2Digits(date.getMinutes())].join(
+        ':'
+      ) +
+        ' ' +
+        [
+          padTo2Digits(date.getDate()),
+          padTo2Digits(date.getMonth() + 1),
+          date.getFullYear(),
+        ].join('/')
+    : [
+        padTo2Digits(date.getDate()),
+        padTo2Digits(date.getMonth() + 1),
+        date.getFullYear(),
+      ].join('/');
+};
+
+export const getInitialTheme = () => {
+  if (typeof window !== 'undefined' && window.localStorage) {
+    const storedPrefs = window.localStorage.getItem('color-theme');
+
+    if (typeof storedPrefs === 'string') {
+      return storedPrefs as ColorTheme;
+    }
+
+    const userMedia = window.matchMedia('(prefers-color-scheme: dark)');
+    if (userMedia.matches) {
+      return 'dark';
+    }
+  }
+
+  // Our default theme
+  return process.env.REACT_APP_DEFAULT_THEME! as ColorTheme;
+};
+
+export const queryClientOptions = {
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+    },
+  },
+};
+
+export const setShowModal = (params: SetShowModalParams) => {
+  const { setModals, name, show, data } = params;
+  setModals((prev: Modals) => ({
+    ...prev,
+    [name]: { show, data: data || undefined },
+  }));
+};

@@ -1,4 +1,4 @@
-import { useForm, useFormState } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import {
   CreateProjectParams,
   PartialProject,
@@ -12,14 +12,13 @@ import { AvailableLanguages } from '../../utils/types/index';
 import React, { useContext, useState } from 'react';
 import { MdClose } from 'react-icons/md';
 import ModalContext from '../../utils/context/ModalContext';
-import { Modals } from '../../utils/types/props';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createProject, updateProject } from '../../utils/api';
 import { toast } from 'react-toastify';
 import useQueryWithRedirect from '../../hooks/useQueryWithRedirect';
 import { motion } from 'framer-motion';
 import Select from '../Shared/Select';
-import { convertToPartialProject, toTitleCase } from '../../utils/helpers';
+import { setShowModal, toTitleCase } from '../../utils/helpers';
 
 const CreateProject = () => {
   const {
@@ -47,17 +46,8 @@ const CreateProject = () => {
   });
 
   const { language } = getValues();
-
-  const closeModal = () => {
-    setModals((prev: Modals) => {
-      return {
-        ...prev,
-        createProject: {
-          show: false,
-        },
-      };
-    });
-  };
+  const closeModal = () =>
+    setShowModal({ setModals, name: 'createProject', show: false });
 
   const [currentIcon, setCurrentIcon] = useState<string | undefined>(
     iconMap.get(language)
@@ -88,16 +78,12 @@ const CreateProject = () => {
     (data: UpdateProjectParams) => updateProject(data),
     {
       onSuccess: (data: Project) => {
-        const converted = convertToPartialProject(data);
+        const projects = queryClient
+          .getQueryData<PartialProject[]>(['projects'])!
+          .filter((p) => p.id !== data.id);
+        projects.unshift(data);
 
-        const projects = queryClient.getQueryData([
-          'projects',
-        ]) as PartialProject[];
-
-        queryClient.setQueryData(
-          ['projects'],
-          projects.map((pr) => (pr.id === project.id ? converted : pr))
-        );
+        queryClient.setQueryData(['projects'], projects);
         toast.success('Project Updated Successfully');
         closeModal();
       },
@@ -136,14 +122,7 @@ const CreateProject = () => {
           <MdClose
             className='absolute w-5 h-5 right-5 top-5 cursor-pointer fill-black dark:fill-white'
             onClick={() => {
-              setModals((prev: Modals) => {
-                return {
-                  ...prev,
-                  createProject: {
-                    show: false,
-                  },
-                };
-              });
+              setShowModal({ setModals, name: 'createProject', show: false });
             }}
           />
           <div className='w-full space-y-3'>
@@ -204,16 +183,24 @@ const CreateProject = () => {
                     },
                   },
                 }}
+                defaultValue={language}
               >
                 {Object.values(AvailableLanguages).map((l) => (
-                  <option key={l} value={l} selected={language === l}>
+                  <option key={l} value={l}>
                     {toTitleCase(l)}
                   </option>
                 ))}
               </Select>
-              <div className='w-9 h-9'>
+              <div className='w-[50px] h-[50px]'>
                 {currentIcon && (
-                  <img src={currentIcon} alt='Stock' className='w-9 h-9' />
+                  <img
+                    src={currentIcon}
+                    alt='Stock'
+                    className=' h-full'
+                    style={{
+                      aspectRatio: 16 / 9,
+                    }}
+                  />
                 )}
               </div>
             </div>

@@ -1,10 +1,12 @@
 import React from 'react';
 import {
   FieldErrorsImpl,
+  FieldValues,
   UseFormRegister,
   UseFormReset,
   UseFormSetValue,
 } from 'react-hook-form';
+import { ClassNameValue } from 'tailwind-merge/dist/lib/join';
 import {
   AvailableLanguages,
   ColorTheme,
@@ -14,19 +16,17 @@ import {
   User,
 } from '.';
 
-type ChangeEvent = (e: React.ChangeEvent<any>) => unknown;
-
 export type ButtonProps = {
   children: React.ReactNode;
-  className?: string;
+  className?: ClassNameValue;
   secondary?: boolean;
   [x: string]: any;
 };
 
 export type SelectProps = {
   children: React.ReactNode;
-  className?: string;
-  formValidation?: FormFieldProps & {
+  className?: ClassNameValue;
+  formValidation?: FormFieldProps<any> & {
     id: string;
     options: any;
   };
@@ -40,22 +40,18 @@ export type ThemeProviderProps = {
 
 export type InputFieldProps = {
   type?: string;
-  formValidation?: FormFieldProps & {
+  formValidation?: FormFieldProps<any> & {
     id: string;
     options: any;
   };
   placeholder: string;
+  className?: ClassNameValue;
   [x: string]: any;
-  className?: string;
 };
 
-export type FormFieldProps = {
-  register: UseFormRegister<any>;
-  errors: FieldErrorsImpl<{
-    name: string;
-    email: string;
-    password: string;
-  }>;
+export type FormFieldProps<T extends FieldValues> = {
+  register: UseFormRegister<T>;
+  errors: FieldErrorsImpl<T>;
 };
 
 export type AppProvidersProps = {
@@ -95,7 +91,6 @@ export type ContextMenuProps = {
   top: number;
   left: number;
   project: PartialProject;
-
   editProject: (project: PartialProject) => void;
   deleteProject: (id: string) => void;
 };
@@ -143,4 +138,9 @@ export type JobSectionProps = {
 export type ActionSectionProps = {
   createJob: () => void;
   disabled: boolean;
+};
+
+export type ProjectHeaderProps = {
+  project: Project;
+  formFieldProps: FormFieldProps<ProjectInfo>;
 };

@@ -12,7 +12,6 @@ const ProjectPageLayout: React.FC<ProjectPageLayoutProps> = ({
       <div className='h-full w-[100%] lg:w-[55%]'>
         <CodeEditor code={code} language={language} setValue={setValue} />
       </div>
-
       {children}
     </div>
   );

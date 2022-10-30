@@ -4,8 +4,8 @@ import { Loader } from 'semantic-ui-react';
 import useQueryWithRedirect from '../../hooks/useQueryWithRedirect';
 import { getProjects } from '../../utils/api';
 import ModalContext from '../../utils/context/ModalContext';
+import { setShowModal } from '../../utils/helpers';
 import { PartialProject } from '../../utils/types';
-import { Modals } from '../../utils/types/props';
 import ProjectCard from '../Project/ProjectCard';
 import ContextMenu from '../Shared/ContextMenu';
 
@@ -76,25 +76,19 @@ const ProjectsSection = () => {
               left={points.x}
               project={selectedProject!}
               deleteProject={(id) => {
-                setModals((prev: Modals) => {
-                  return {
-                    ...prev,
-                    confirmDeletion: {
-                      show: true,
-                      data: id,
-                    },
-                  };
+                setShowModal({
+                  setModals,
+                  name: 'confirmDeletion',
+                  show: true,
+                  data: id,
                 });
               }}
               editProject={(project) => {
-                setModals((prev: Modals) => {
-                  return {
-                    ...prev,
-                    createProject: {
-                      show: true,
-                      data: project,
-                    },
-                  };
+                setShowModal({
+                  setModals,
+                  name: 'createProject',
+                  show: true,
+                  data: project,
                 });
               }}
             />

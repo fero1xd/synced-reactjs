@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { FaMoon, FaRegMoon } from 'react-icons/fa';
+import { ToastContainer } from 'react-toastify';
 import ThemeContext from '../../utils/context/ThemeContext';
 
 const ToggleTheme = () => {
@@ -20,6 +21,7 @@ const ToggleTheme = () => {
           onClick={() => setTheme('dark')}
         />
       )}
+      <ToastContainer theme={theme} position='bottom-center' limit={2} />
     </>
   );
 };

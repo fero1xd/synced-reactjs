@@ -5,6 +5,7 @@ import { useContext } from 'react';
 import ModalContext from '../utils/context/ModalContext';
 import { Modals } from '../utils/types/props';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 const useQueryWithRedirect = (custom?: any) => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ const useQueryWithRedirect = (custom?: any) => {
     retry: false,
     onError: (err: AxiosError) => {
       const status = err.response?.status!;
+      const { message } = <{ message?: string }>err.response?.data;
 
       if (status === 403) {
         client.clear();
@@ -24,6 +26,11 @@ const useQueryWithRedirect = (custom?: any) => {
       } else if (status !== 401) {
         navigate('/home');
       }
+
+      if (message) {
+        toast.error(message);
+      }
+
       setModals((prev: Modals) => {
         const n = { ...prev };
 

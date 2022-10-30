@@ -1,4 +1,0 @@
-
-1. Fetch last job on project page entry 
-2. Listen for socket event when job is done and make it the last job
-3. Add modal to display all jobs if any

@@ -4,7 +4,7 @@ import Button from '../../components/Shared/Button';
 import Input from '../../components/Shared/Input';
 import AuthContext from '../../utils/context/AuthContext';
 import ModalContext from '../../utils/context/ModalContext';
-import { Modals } from '../../utils/types/props';
+import { setShowModal } from '../../utils/helpers';
 
 const HomeHeader = () => {
   const { setModals } = useContext(ModalContext);
@@ -14,7 +14,7 @@ const HomeHeader = () => {
     <>
       <h1 className='text-[40px] font-inter font-extrabold text-center drop-shadow-md tracking-[.15em] flex gap-4 flex-shrink-0'>
         Hello
-        <span className='underline text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-red-600'>
+        <span className='underline text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-red-600'>
           {user?.name}
         </span>
       </h1>
@@ -22,16 +22,9 @@ const HomeHeader = () => {
       <div className='w-full flex justify-between items-center mt-32 px-4 flex-shrink-0'>
         <Button
           className='rounded-md px-12'
-          onClick={() => {
-            setModals((prev: Modals) => {
-              return {
-                ...prev,
-                createProject: {
-                  show: true,
-                },
-              };
-            });
-          }}
+          onClick={() =>
+            setShowModal({ setModals, name: 'createProject', show: true })
+          }
         >
           New
         </Button>

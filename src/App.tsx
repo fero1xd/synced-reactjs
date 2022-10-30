@@ -20,7 +20,6 @@ import ConfirmationModal from './components/Modals/ConfirmationModal';
 const App = () => {
   const [user, setUser] = useState<User>();
   const [modals, setModals] = useState<Modals>(defaultModalState);
-
   const { createProject, confirmDeletion } = modals;
 
   return (
@@ -47,7 +46,6 @@ const App = () => {
             <Route path='/project/:id' element={<ProjectPage />} />
           </Route>
         </Routes>
-        <ToastContainer theme='dark' position='bottom-center' limit={2} />
       </AppCover>
     </>
   );

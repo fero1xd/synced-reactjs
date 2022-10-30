@@ -2,15 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import { Loader } from 'semantic-ui-react';
 import { RiLogoutCircleFill } from 'react-icons/ri';
 import {
-  AvailableLanguages,
   Job,
   JobStatus,
   Project,
   UpdateProjectParams,
 } from '../../utils/types';
-import Select from '../../components/Shared/Select';
 import { ProjectInfo } from '../../utils/types/props';
-import { toTitleCase } from '../../utils/helpers';
 import ProjectPageLayout from '../../components/Project/ProjectPageLayout';
 import EditDescription from '../../components/Project/EditDescription';
 import ActionSection from '../../components/Project/ActionSection';
@@ -28,6 +25,7 @@ import useQueryWithRedirect from '../../hooks/useQueryWithRedirect';
 import JobSection from '../../components/Project/JobSection';
 import { useContext, useEffect } from 'react';
 import { SocketContext } from '../../utils/context/SocketContext';
+import ProjectHeader from '../../components/Project/ProjectHeader';
 
 const ProjectPage = () => {
   const navigate = useNavigate();
@@ -72,7 +70,7 @@ const ProjectPage = () => {
   );
 
   // Update project mutation
-  const updateMutation = useMutation(
+  const updateProjectMutation = useMutation(
     (data: UpdateProjectParams) => updateProject(data),
     {
       onSuccess: (data: Project) => {
@@ -87,7 +85,8 @@ const ProjectPage = () => {
     }
   );
 
-  const createMutation = useMutation((id: string) => createJobApi(id), {
+  // Create Job Mutation
+  const createJobMutation = useMutation((id: string) => createJobApi(id), {
     onSuccess: (data: Job) => {
       const updated = {
         ...data,
@@ -101,8 +100,9 @@ const ProjectPage = () => {
 
   // Save project
   const saveProject = (data: ProjectInfo) => {
+    // If form fields are actually changed
     if (!isDirty) return;
-    updateMutation.mutateAsync({ id: project!.id.toString(), ...data });
+    updateProjectMutation.mutateAsync({ id: project!.id.toString(), ...data });
   };
 
   // Listening for onJobDone event
@@ -124,15 +124,17 @@ const ProjectPage = () => {
     return () => {
       socket.off('onJobDone');
     };
-  }, [socket, project]);
+  }, [socket, project, queryClient]);
 
   // Create job
   const createJob = () => {
     if (!project) return;
-
-    createMutation.mutateAsync(project.id.toString());
+    createJobMutation.mutateAsync(project.id.toString());
   };
 
+  // isLoading: wether project is loading
+  // project: The project
+  // isJobLoading: wether last job is loading
   if (isLoading || !project || isJobLoading)
     return <Loader active size='big' />;
 
@@ -150,29 +152,10 @@ const ProjectPage = () => {
           />
 
           <div className='flex flex-col items-center justify-between h-full'>
-            <div className='w-full flex justify-between items-center'>
-              <h1 className='text-[28px] underline underline-offset-4 font-extrabold'>
-                {toTitleCase(project.name)}
-              </h1>
-
-              <Select
-                className='w-[250px]'
-                formValidation={{
-                  id: 'language',
-                  register,
-                  errors,
-                  options: {
-                    required: 'You have to select one language',
-                  },
-                }}
-              >
-                {Object.values(AvailableLanguages).map((l) => (
-                  <option key={l} value={l}>
-                    {toTitleCase(l)}
-                  </option>
-                ))}
-              </Select>
-            </div>
+            <ProjectHeader
+              formFieldProps={{ register, errors }}
+              project={project}
+            />
 
             <JobSection lastJobRan={lastJobRan} />
 
@@ -181,7 +164,7 @@ const ProjectPage = () => {
               <ActionSection
                 createJob={createJob}
                 disabled={
-                  createMutation.isLoading ||
+                  createJobMutation.isLoading ||
                   lastJobRan?.status === JobStatus.PENDING
                 }
               />

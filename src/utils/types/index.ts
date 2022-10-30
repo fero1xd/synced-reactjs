@@ -19,6 +19,7 @@ export type User = {
 export enum AvailableLanguages {
   JAVASCRIPT = 'javascript',
   PYTHON = 'python',
+  JAVA = 'java',
 }
 
 export type PartialProject = {
@@ -26,6 +27,8 @@ export type PartialProject = {
   name: string;
   language: AvailableLanguages;
   description?: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Project = PartialProject & {
@@ -59,4 +62,11 @@ export type Job = {
   output?: string;
   startedAt?: Date;
   compiledAt?: Date;
+};
+
+export type SetShowModalParams = {
+  setModals: any;
+  name: string;
+  show: boolean;
+  data?: any;
 };

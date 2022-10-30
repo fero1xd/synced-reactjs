@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteProject } from '../../utils/api';
 import { PartialProject } from '../../utils/types';
 import useQueryWithRedirect from '../../hooks/useQueryWithRedirect';
+import { setShowModal } from '../../utils/helpers';
 
 const ConfirmationModal = () => {
   const {
@@ -17,16 +18,8 @@ const ConfirmationModal = () => {
   } = useContext(ModalContext);
   const queryClient = useQueryClient();
 
-  const closeModal = () => {
-    setModals((prev: Modals) => {
-      return {
-        ...prev,
-        confirmDeletion: {
-          show: false,
-        },
-      };
-    });
-  };
+  const closeModal = () =>
+    setShowModal({ setModals, name: 'confirmDeletion', show: false });
 
   const mutation = useMutation((id: string) => deleteProject(id), {
     onSuccess: (_, id) => {

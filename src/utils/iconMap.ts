@@ -1,13 +1,8 @@
 import { AvailableLanguages } from './types';
 
 const map = new Map<AvailableLanguages, string>();
-map.set(
-  AvailableLanguages.PYTHON,
-  'https://cdn-fero.tk/synced/icons/python.png'
-);
-map.set(
-  AvailableLanguages.JAVASCRIPT,
-  'https://cdn-fero.tk/synced/icons/nodejs.png'
-);
+map.set(AvailableLanguages.PYTHON, '/images/python.png');
+map.set(AvailableLanguages.JAVASCRIPT, '/images/nodejs.png');
+map.set(AvailableLanguages.JAVA, '/images/java.png');
 
 export default map;
