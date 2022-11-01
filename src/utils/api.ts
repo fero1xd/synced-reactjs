@@ -52,3 +52,6 @@ export const createJob = (id: string) =>
   axiosClient
     .post<Job>(`/jobs`, { projectId: id }, config)
     .then((res) => res.data);
+
+export const getAllJobs = (id: string) =>
+  axiosClient.get<Job[]>(`/jobs/${id}`, config).then((res) => res.data);

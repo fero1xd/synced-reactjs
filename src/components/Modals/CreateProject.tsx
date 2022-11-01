@@ -191,7 +191,7 @@ const CreateProject = () => {
                   </option>
                 ))}
               </Select>
-              <div className='w-[50px] h-[50px]'>
+              <div className='w-[48px] h-[48px] p-1'>
                 {currentIcon && (
                   <img
                     src={currentIcon}

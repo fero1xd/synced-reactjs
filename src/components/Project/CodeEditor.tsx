@@ -1,4 +1,4 @@
-import Editor from '@monaco-editor/react';
+import Editor, { useMonaco } from '@monaco-editor/react';
 import { useContext, useEffect, useRef } from 'react';
 import { Loader } from 'semantic-ui-react';
 import ThemeContext from '../../utils/context/ThemeContext';
@@ -13,9 +13,10 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
   const { theme } = useContext(ThemeContext);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>();
 
+  useMonaco();
+
   useEffect(() => {
     window.addEventListener('resize', handleResize);
-
     return () => {
       window.removeEventListener('resize', handleResize);
     };
@@ -32,7 +33,9 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
       }
       theme={theme === 'light' ? 'vs-light' : 'vs-dark'}
       loading={<Loader active size='small' content='Loading Editor' />}
-      onMount={(editor) => (editorRef.current = editor)}
+      onMount={(editor) => {
+        editorRef.current = editor;
+      }}
       options={{
         autoDetectHighContrast: false,
         // readOnly: true,

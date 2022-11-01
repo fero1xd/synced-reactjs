@@ -99,6 +99,8 @@ export type CodeEditorProps = {
   language: AvailableLanguages;
   code: string;
   setValue: UseFormSetValue<ProjectInfo>;
+  isDirty: boolean;
+  saveProject: () => void;
 };
 
 export type ProjectInfo = {
@@ -112,6 +114,8 @@ export type ProjectPageLayoutProps = {
   language: AvailableLanguages;
   children: React.ReactNode;
   setValue: UseFormSetValue<ProjectInfo>;
+  isDirty: boolean;
+  saveProject: () => void;
 };
 
 export type EditDescriptionProps = {
@@ -132,12 +136,15 @@ export type UseProjectReturnType = {
 export type UseProject = (data: UseProjectProps) => UseProjectReturnType;
 
 export type JobSectionProps = {
-  lastJobRan?: Job;
+  jobs: Job[];
+  showSeeAll?: boolean;
+  compact?: boolean;
 };
 
 export type ActionSectionProps = {
   createJob: () => void;
   disabled: boolean;
+  className?: ClassNameValue;
 };
 
 export type ProjectHeaderProps = {

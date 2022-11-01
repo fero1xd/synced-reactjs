@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Loader } from 'semantic-ui-react';
 import { RiLogoutCircleFill } from 'react-icons/ri';
+import { GiHamburgerMenu } from 'react-icons/gi';
 import {
   Job,
   JobStatus,
@@ -17,20 +18,23 @@ import SaveProject from '../../components/Project/SaveProject';
 import { AnimatePresence } from 'framer-motion';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  getLatestJob,
   updateProject,
   createJob as createJobApi,
+  getAllJobs,
 } from '../../utils/api';
 import useQueryWithRedirect from '../../hooks/useQueryWithRedirect';
 import JobSection from '../../components/Project/JobSection';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SocketContext } from '../../utils/context/SocketContext';
 import ProjectHeader from '../../components/Project/ProjectHeader';
+import ProjectModal from '../../components/Modals/ProjectModal';
+import { convertJob } from '../../utils/helpers';
 
 const ProjectPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const socket = useContext(SocketContext);
+  const [showOverlay, setShowOverlay] = useState(false);
 
   // Form validation
   const { register, formState, reset, getValues, handleSubmit, setValue } =
@@ -45,26 +49,55 @@ const ProjectPage = () => {
   // Fetching project
   const { isLoading, project } = useProject({ reset });
 
-  // Fetching latest job if any
-  const { isLoading: isJobLoading, data: lastJobRan } = useQuery(
-    ['job', project?.id],
-    () => getLatestJob(project!.id.toString()),
+  // // Fetching jobs related to the project
+  // const { isLoading: isJobLoading, data: lastJobRan } = useQuery(
+  //   ['job', project?.id.toString()],
+  //   () => getLatestJob(project!.id.toString()),
+  //   useQueryWithRedirect({
+  //     enabled: !!project?.id,
+  //     cacheTime: 0,
+  //     onSuccess: (data?: Job) => {
+  //       if (!data) {
+  //         return queryClient.setQueryData(
+  //           ['job', project?.id.toString()],
+  //           null
+  //         );
+  //       }
+  //       const { compiledAt, startedAt } = data;
+  //       const updated = {
+  //         ...data,
+  //         submittedAt: new Date(data.submittedAt),
+  //       };
+  //       if (compiledAt) updated.compiledAt = new Date(compiledAt);
+  //       if (startedAt) updated.startedAt = new Date(startedAt);
+
+  //       queryClient.setQueryData(['job', project?.id.toString()], updated);
+  //     },
+  //   })
+  // );
+  const { isLoading: isJobLoading, data: jobs } = useQuery(
+    ['jobs', project?.id.toString()],
+    () => getAllJobs(project!.id.toString()),
     useQueryWithRedirect({
       enabled: !!project?.id,
       cacheTime: 0,
-      onSuccess: (data?: Job) => {
-        if (!data) {
-          return queryClient.setQueryData(['job', project?.id], null);
+      onSuccess: (data: Job[]) => {
+        if (!data || !data.length) {
+          return queryClient.setQueryData(['jobs', project?.id.toString()], []);
         }
-        const { compiledAt, startedAt } = data;
-        const updated = {
-          ...data,
-          submittedAt: new Date(data.submittedAt),
-        };
-        if (compiledAt) updated.compiledAt = new Date(compiledAt);
-        if (startedAt) updated.startedAt = new Date(startedAt);
 
-        queryClient.setQueryData(['job', project?.id], updated);
+        const converted = data.map((job) => {
+          const { compiledAt, startedAt } = job;
+          const updated = {
+            ...job,
+            submittedAt: new Date(job.submittedAt),
+          };
+          if (compiledAt) updated.compiledAt = new Date(compiledAt);
+          if (startedAt) updated.startedAt = new Date(startedAt);
+          return updated;
+        });
+
+        queryClient.setQueryData(['jobs', project?.id.toString()], converted);
       },
     })
   );
@@ -88,12 +121,13 @@ const ProjectPage = () => {
   // Create Job Mutation
   const createJobMutation = useMutation((id: string) => createJobApi(id), {
     onSuccess: (data: Job) => {
-      const updated = {
-        ...data,
-        submittedAt: new Date(data.submittedAt),
-      };
+      const converted = convertJob(data);
+      const currentJobs = (
+        queryClient.getQueryData(['jobs', project?.id.toString()]) as Job[]
+      ).filter((j) => j.id !== converted.id);
+      currentJobs.unshift(converted);
 
-      queryClient.setQueryData(['job', project?.id], updated);
+      queryClient.setQueryData(['jobs', project?.id.toString()], currentJobs);
     },
     ...useQueryWithRedirect(),
   });
@@ -110,15 +144,16 @@ const ProjectPage = () => {
     if (!project) return;
 
     socket.on('onJobDone', (job: Job) => {
-      const { compiledAt, startedAt } = job;
-      const updated = {
-        ...job,
-        submittedAt: new Date(job.submittedAt),
-      };
-      if (compiledAt) updated.compiledAt = new Date(compiledAt);
-      if (startedAt) updated.startedAt = new Date(startedAt);
+      const converted = convertJob(job);
+      const currentJobs = (
+        queryClient.getQueryData(['jobs', project.id.toString()]) as Job[]
+      ).filter((j) => j.id !== converted.id);
+      currentJobs.unshift(converted);
 
-      queryClient.setQueryData(['job', project?.id], updated);
+      console.log(job);
+      console.log(currentJobs);
+
+      queryClient.setQueryData(['jobs', project.id.toString()], currentJobs);
     });
 
     return () => {
@@ -144,8 +179,35 @@ const ProjectPage = () => {
         {isDirty && <SaveProject handleSubmit={handleSubmit(saveProject)} />}
       </AnimatePresence>
 
-      <ProjectPageLayout code={code} language={language} setValue={setValue}>
-        <div className='h-full hidden lg:w-[45%] p-10 lg:flex flex-col border-l-[.2px] border-[#1E1E1E] shrink gap-12'>
+      <ProjectPageLayout
+        saveProject={handleSubmit(saveProject)}
+        code={code}
+        language={language}
+        setValue={setValue}
+        isDirty={isDirty}
+      >
+        <GiHamburgerMenu
+          className='w-7 h-7 fixed lg:hidden right-24 top-10'
+          style={{ zIndex: 9999 }}
+          onClick={() => setShowOverlay((prev) => !prev)}
+        />
+
+        <AnimatePresence key={project.id}>
+          {showOverlay && (
+            <ProjectModal
+              jobs={jobs ?? []}
+              createJob={createJob}
+              disabled={
+                createJobMutation.isLoading ||
+                (jobs
+                  ? jobs.some((j) => j.status === JobStatus.PENDING)
+                  : false)
+              }
+            />
+          )}
+        </AnimatePresence>
+
+        <div className='h-full hidden lg:w-[45%] lg:flex p-10 flex-col border-l-[.2px] border-[#1E1E1E] shrink gap-12'>
           <RiLogoutCircleFill
             className='w-10 h-10  cursor-pointer'
             onClick={() => navigate('/home')}
@@ -157,7 +219,10 @@ const ProjectPage = () => {
               project={project}
             />
 
-            <JobSection lastJobRan={lastJobRan} />
+            <JobSection
+              jobs={jobs?.length ? [jobs[0]] : []}
+              showSeeAll={true}
+            />
 
             <div className='flex flex-col items-center justify-center gap-4 w-full'>
               <EditDescription setValue={setValue} description={description} />
@@ -165,7 +230,9 @@ const ProjectPage = () => {
                 createJob={createJob}
                 disabled={
                   createJobMutation.isLoading ||
-                  lastJobRan?.status === JobStatus.PENDING
+                  (jobs
+                    ? jobs.some((j) => j.status === JobStatus.PENDING)
+                    : false)
                 }
               />
             </div>

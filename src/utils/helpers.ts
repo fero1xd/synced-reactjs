@@ -1,5 +1,6 @@
 import {
   ColorTheme,
+  Job,
   PartialProject,
   Project,
   SetShowModalParams,
@@ -17,20 +18,22 @@ const padTo2Digits = (num: number) => {
 };
 
 export const formatDate = (date: Date, hideSeconds?: boolean) => {
+  const newDate = new Date(date);
   return !hideSeconds
-    ? [padTo2Digits(date.getHours()), padTo2Digits(date.getMinutes())].join(
-        ':'
-      ) +
+    ? [
+        padTo2Digits(newDate.getHours()),
+        padTo2Digits(newDate.getMinutes()),
+      ].join(':') +
         ' ' +
         [
-          padTo2Digits(date.getDate()),
-          padTo2Digits(date.getMonth() + 1),
-          date.getFullYear(),
+          padTo2Digits(newDate.getDate()),
+          padTo2Digits(newDate.getMonth() + 1),
+          newDate.getFullYear(),
         ].join('/')
     : [
-        padTo2Digits(date.getDate()),
-        padTo2Digits(date.getMonth() + 1),
-        date.getFullYear(),
+        padTo2Digits(newDate.getDate()),
+        padTo2Digits(newDate.getMonth() + 1),
+        newDate.getFullYear(),
       ].join('/');
 };
 
@@ -66,4 +69,17 @@ export const setShowModal = (params: SetShowModalParams) => {
     ...prev,
     [name]: { show, data: data || undefined },
   }));
+};
+
+export const convertJob = (job: Job) => {
+  const { compiledAt, startedAt } = job;
+
+  const updated = {
+    ...job,
+    submittedAt: new Date(job.submittedAt),
+  };
+  if (compiledAt) updated.compiledAt = new Date(compiledAt);
+  if (startedAt) updated.startedAt = new Date(startedAt);
+
+  return updated;
 };

@@ -11,7 +11,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   return (
     <>
       <div className='w-full max-h-[150px] dark:bg-input flex justify-between px-6 py-10 rounded-2xl shadow-md dark:shadow-sm gap-4'>
-        <img src={link} alt='stock' className='w-[42px] h-[42px] block' />
+        <img src={link} alt='stock' className='w-[40px] h-[40px] block' />
         <div className='flex flex-col gap-3 flex-1 font-inria'>
           <div className='flex  items-center justify-between'>
             <h1 className='text-lg'>{project.name}</h1>

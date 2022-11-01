@@ -12,12 +12,14 @@ const ToggleTheme = () => {
       {theme === 'dark' ? (
         <FaMoon
           className={switchThemeClass}
+          style={{ zIndex: 9999 }}
           color='white'
           onClick={() => setTheme('light')}
         />
       ) : (
         <FaRegMoon
           className={switchThemeClass}
+          style={{ zIndex: 9999 }}
           onClick={() => setTheme('dark')}
         />
       )}
