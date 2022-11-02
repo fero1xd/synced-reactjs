@@ -7,6 +7,7 @@ const JobSection: React.FC<JobSectionProps> = ({
   jobs,
   showSeeAll,
   compact,
+  onClick,
 }) => {
   const thClassname =
     'py-3 text-xs lg:text-sm text-black dark:text-[#bcbcbc] font-semibold tracking-wide text-center';
@@ -15,10 +16,10 @@ const JobSection: React.FC<JobSectionProps> = ({
     'py-3 text-black dark:text-[#A8A8A8] font-medium text-center text-xs lg:text-sm';
 
   return (
-    <div className='w-full space-y-5 font-inter mt-10 transition-colors duration-300 ease-in-out'>
-      <h2 className='text-[22px] font-bold'>Jobs</h2>
+    <div className='w-full space-y-5 font-inter transition-colors duration-300 ease-in-out'>
+      <h2 className='text-[22px] font-bold drop-shadow-md'>Jobs</h2>
 
-      <table className='w-full bg-white dark:bg-[#151515] text-center divide-y-2 divide-[#1C1C1C] rounded-md shadow-md table-fixed'>
+      <table className='w-full bg-white dark:bg-[#151515] text-center divide-y-2 divide-[#1C1C1C] rounded-md shadow-md table-fixed border border-black dark:border-darkAccent'>
         <thead>
           <tr className='divide-x-2 divide-[#1C1C1C] opacity-[80%]'>
             <th className={thClassname}>Id</th>
@@ -54,30 +55,10 @@ const JobSection: React.FC<JobSectionProps> = ({
                   <td className={tdClassname}>{job.id}</td>
                   <td className={tdClassname}>{formatDate(job.submittedAt)}</td>
                   <td className={tdClassname}>
-                    {job.startedAt ? (
-                      formatDate(job.startedAt)
-                    ) : (
-                      <div
-                        role='status'
-                        className='max-w-sm animate-pulse px-6'
-                      >
-                        <div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-800  mb-4' />
-                        <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-800' />
-                      </div>
-                    )}
+                    {job.startedAt ? formatDate(job.startedAt) : <p>-</p>}
                   </td>
                   <td className={tdClassname}>
-                    {job.compiledAt ? (
-                      formatDate(job.compiledAt)
-                    ) : (
-                      <div
-                        role='status'
-                        className='max-w-sm animate-pulse px-6'
-                      >
-                        <div className='h-2.5 bg-gray-200 rounded-full dark:bg-gray-800 mb-4' />
-                        <div className='h-2 bg-gray-200 rounded-full dark:bg-gray-800' />
-                      </div>
-                    )}
+                    {job.compiledAt ? formatDate(job.compiledAt) : <p>-</p>}
                   </td>
 
                   <td
@@ -103,6 +84,7 @@ const JobSection: React.FC<JobSectionProps> = ({
                       'text-center text-link dark:text-link underline cursor-pointer opacity-[100%] py-5'
                     )}
                     colSpan={5}
+                    onClick={onClick}
                   >
                     See All
                   </td>

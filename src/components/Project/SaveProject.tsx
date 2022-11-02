@@ -22,12 +22,10 @@ const SaveProject: React.FC<{ handleSubmit: () => void }> = ({
         className='w-[400px] md:w-[600px] lg:w-[600px] px-6 py-5 flex items-center justify-center text-center'
       >
         <div
-          className='px-6 py-5 rounded-md bg-input flex flex-col gap-6 md:flex-row
-        lg:flex-row items-center justify-between relative'
+          className='px-6 py-5 rounded-md bg-white dark:bg-input flex flex-col gap-3 lg:gap-6 md:flex-row
+        lg:flex-row items-center justify-between relative text-black dark:text-white shadow-md'
         >
-          <h1 className='text-white text-md tracking-wider'>
-            You have unsaved changes{' '}
-          </h1>
+          <h1 className='text-md tracking-wider'>You have unsaved changes </h1>
 
           <div className='flex gap-4 items-center justify-center'>
             <Button className='px-5 py-2' onClick={handleSubmit}>

@@ -1,7 +1,9 @@
+import { UseMutationResult } from '@tanstack/react-query';
 import React from 'react';
 import {
   FieldErrorsImpl,
   FieldValues,
+  SetFieldValue,
   UseFormRegister,
   UseFormReset,
   UseFormSetValue,
@@ -13,6 +15,7 @@ import {
   Job,
   PartialProject,
   Project,
+  UpdateProjectParams,
   User,
 } from '.';
 
@@ -131,14 +134,29 @@ export type UseProjectReturnType = {
   isLoading: boolean;
   isError: boolean;
   project?: Project;
+  updateProjectMutation: UseMutationResult<
+    any,
+    unknown,
+    UpdateProjectParams,
+    unknown
+  >;
+};
+
+export type UseJobsReturnType = {
+  areJobsLoading: boolean;
+  isError: boolean;
+  jobs?: Job[];
+  createJobMutation: UseMutationResult<unknown, unknown, string, unknown>;
 };
 
 export type UseProject = (data: UseProjectProps) => UseProjectReturnType;
+export type UseJobs = (project?: Project) => UseJobsReturnType;
 
 export type JobSectionProps = {
   jobs: Job[];
   showSeeAll?: boolean;
   compact?: boolean;
+  onClick?: () => void;
 };
 
 export type ActionSectionProps = {
@@ -149,5 +167,16 @@ export type ActionSectionProps = {
 
 export type ProjectHeaderProps = {
   project: Project;
-  formFieldProps: FormFieldProps<ProjectInfo>;
+  formFieldProps?: FormFieldProps<ProjectInfo>;
+};
+
+export type ProjectModalProps = {
+  createJob: () => void;
+  disabled: boolean;
+  jobs: Job[];
+  handleClick: () => void;
+  project: Project;
+  setValue: UseFormSetValue<ProjectInfo>;
+  description: string;
+  language: string;
 };

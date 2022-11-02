@@ -1,12 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
-import { getProject } from '../utils/api';
-import { Project } from '../utils/types';
+import { getProject, updateProject } from '../utils/api';
+import { Project, UpdateProjectParams } from '../utils/types';
 import { UseProject } from '../utils/types/props';
 import useQueryWithRedirect from './useQueryWithRedirect';
 
 const useProject: UseProject = ({ reset }) => {
   const params = useParams();
+  const queryClient = useQueryClient();
 
   const {
     isLoading,
@@ -27,7 +28,22 @@ const useProject: UseProject = ({ reset }) => {
     })
   );
 
-  return { isLoading, project, isError };
+  const updateProjectMutation = useMutation(
+    (data: UpdateProjectParams) => updateProject(data),
+    {
+      onSuccess: (data: Project) => {
+        queryClient.setQueryData(['projects', data.id.toString()], data);
+        reset({
+          code: data.code,
+          description: data.description,
+          language: data.language,
+        });
+      },
+      ...useQueryWithRedirect(),
+    }
+  );
+
+  return { isLoading, project, isError, updateProjectMutation };
 };
 
 export default useProject;

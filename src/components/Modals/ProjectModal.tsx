@@ -1,42 +1,78 @@
-import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Loader } from 'semantic-ui-react';
-import useQueryWithRedirect from '../../hooks/useQueryWithRedirect';
-import { getAllJobs } from '../../utils/api';
-import { Job } from '../../utils/types';
+import { MdClose } from 'react-icons/md';
+import { toTitleCase } from '../../utils/helpers';
+import { AvailableLanguages } from '../../utils/types';
+import { ProjectModalProps } from '../../utils/types/props';
 import ActionSection from '../Project/ActionSection';
+import EditDescription from '../Project/EditDescription';
 import JobSection from '../Project/JobSection';
+import ProjectHeader from '../Project/ProjectHeader';
+import Select from '../Shared/Select';
 
-const ProjectModal: React.FC<{
-  createJob: () => void;
-  disabled: boolean;
-  jobs: Job[];
-}> = ({ createJob, disabled, jobs }) => {
+const ProjectModal: React.FC<ProjectModalProps> = ({
+  createJob,
+  disabled,
+  jobs,
+  handleClick,
+  project,
+  setValue,
+  description,
+  language,
+}) => {
   return (
     <>
       <motion.div
         initial={{
-          opacity: 0.8,
           x: '100vw',
         }}
         transition={{ duration: 0.5 }}
         animate={{
-          opacity: 1,
           x: '0',
         }}
         exit={{
-          opacity: 0.8,
           x: '100vw',
         }}
-        className='fixed transition-colors duration-200 w-[100%] h-[100%]  bg-white dark:bg-darkAccent lg:hidden py-10 px-10  overflow-y-auto'
+        className='fixed transition-colors duration-200 w-[100%] h-[100%]  bg-white dark:bg-darkAccent py-10 px-5 lg:px-10  overflow-y-auto'
+        style={{
+          zIndex: 999,
+        }}
       >
-        <div className='mt-10'>
+        <MdClose
+          className='w-5 h-5  cursor-pointer fill-black dark:fill-white'
+          onClick={handleClick}
+        />
+        <div className='mt-12 flex flex-col gap-16'>
+          <div className='w-full flex justify-between items-center'>
+            <h1 className='text-[25px] underline underline-offset-4 font-extrabold'>
+              {toTitleCase(project.name)}
+            </h1>
+
+            <Select
+              className='w-[150px] lg:w-[250px]'
+              value={language}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                setValue('language', e.target.value as AvailableLanguages, {
+                  shouldDirty: true,
+                });
+              }}
+            >
+              {Object.values(AvailableLanguages).map((l) => (
+                <option key={l} value={l}>
+                  {toTitleCase(l)}
+                </option>
+              ))}
+            </Select>
+          </div>
+
+          <JobSection jobs={jobs ?? []} showSeeAll={false} compact={true} />
+
+          <EditDescription setValue={setValue} description={description} />
+
           <ActionSection
             createJob={createJob}
             disabled={disabled}
             className='px-8 py-3 mr-auto'
           />
-          <JobSection jobs={jobs ?? []} showSeeAll={false} compact={true} />
         </div>
       </motion.div>
     </>
