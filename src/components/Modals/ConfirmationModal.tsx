@@ -1,7 +1,6 @@
 import Button from '../Shared/Button';
 import { useContext } from 'react';
 import ModalContext from '../../utils/context/ModalContext';
-import { Modals } from '../../utils/types/props';
 import { motion } from 'framer-motion';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteProject } from '../../utils/api';

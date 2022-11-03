@@ -6,7 +6,6 @@ import { ProjectModalProps } from '../../utils/types/props';
 import ActionSection from '../Project/ActionSection';
 import EditDescription from '../Project/EditDescription';
 import JobSection from '../Project/JobSection';
-import ProjectHeader from '../Project/ProjectHeader';
 import Select from '../Shared/Select';
 
 const ProjectModal: React.FC<ProjectModalProps> = ({
@@ -18,6 +17,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
   setValue,
   description,
   language,
+  setShowJobOutput,
 }) => {
   return (
     <>
@@ -42,7 +42,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
           onClick={handleClick}
         />
         <div className='mt-12 flex flex-col gap-16'>
-          <div className='w-full flex justify-between items-center'>
+          <div className='w-full flex justify-between items-center lg:hidden'>
             <h1 className='text-[25px] underline underline-offset-4 font-extrabold'>
               {toTitleCase(project.name)}
             </h1>
@@ -64,9 +64,16 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
             </Select>
           </div>
 
-          <JobSection jobs={jobs ?? []} showSeeAll={false} compact={true} />
+          <JobSection
+            jobs={jobs ?? []}
+            showSeeAll={false}
+            compact={true}
+            setShowJobOutput={setShowJobOutput}
+          />
 
-          <EditDescription setValue={setValue} description={description} />
+          <div className='w-full lg:hidden'>
+            <EditDescription setValue={setValue} description={description} />
+          </div>
 
           <ActionSection
             createJob={createJob}

@@ -7,6 +7,7 @@ module.exports = {
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
         inria: ['Inria Sans', 'sans-serif'],
+        sCode: ['Source Code Pro', 'sans-serif'],
       },
       colors: {
         darkAccent: '#131313',

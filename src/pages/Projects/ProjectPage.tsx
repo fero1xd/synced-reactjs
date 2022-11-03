@@ -19,12 +19,14 @@ import ProjectHeader from '../../components/Project/ProjectHeader';
 import ProjectModal from '../../components/Modals/ProjectModal';
 import { convertJob } from '../../utils/helpers';
 import useJobs from '../../hooks/useJobs';
+import JobOutput from '../../components/Modals/JobOutput';
 
 const ProjectPage = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const socket = useContext(SocketContext);
   const [showOverlay, setShowOverlay] = useState(false);
+  const [showJobOutput, setShowJobOutput] = useState<Job>();
 
   // Form validation
   const { register, formState, reset, watch, handleSubmit, setValue } =
@@ -75,13 +77,16 @@ const ProjectPage = () => {
   // isLoading: wether project is loading
   // project: The project
   // areJobsLoading: wether last job is loading
-  if (isLoading || !project || areJobsLoading)
+  if (isLoading || !project || areJobsLoading || !jobs)
     return <Loader active size='big' />;
 
   return (
     <>
       <AnimatePresence>
         {isDirty && <SaveProject handleSubmit={handleSubmit(saveProject)} />}
+        {showJobOutput && (
+          <JobOutput job={showJobOutput} setShowJobOutput={setShowJobOutput} />
+        )}
       </AnimatePresence>
 
       <ProjectPageLayout
@@ -93,7 +98,7 @@ const ProjectPage = () => {
       >
         <GiHamburgerMenu
           className='w-7 h-7 fixed lg:hidden right-24 top-10'
-          style={{ zIndex: 9999 }}
+          style={{ zIndex: 1000 }}
           onClick={() => setShowOverlay((prev) => !prev)}
         />
 
@@ -113,6 +118,7 @@ const ProjectPage = () => {
               setValue={setValue}
               description={description}
               language={language}
+              setShowJobOutput={setShowJobOutput}
             />
           )}
         </AnimatePresence>
@@ -133,6 +139,7 @@ const ProjectPage = () => {
               jobs={jobs?.length ? [jobs[0]] : []}
               showSeeAll={true}
               onClick={() => setShowOverlay(true)}
+              setShowJobOutput={setShowJobOutput}
             />
 
             <div className='flex flex-col items-center justify-center gap-4 w-full'>

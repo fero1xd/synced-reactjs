@@ -3,7 +3,6 @@ import React from 'react';
 import {
   FieldErrorsImpl,
   FieldValues,
-  SetFieldValue,
   UseFormRegister,
   UseFormReset,
   UseFormSetValue,
@@ -157,6 +156,7 @@ export type JobSectionProps = {
   showSeeAll?: boolean;
   compact?: boolean;
   onClick?: () => void;
+  setShowJobOutput: React.Dispatch<React.SetStateAction<Job | undefined>>;
 };
 
 export type ActionSectionProps = {
@@ -179,4 +179,10 @@ export type ProjectModalProps = {
   setValue: UseFormSetValue<ProjectInfo>;
   description: string;
   language: string;
+  setShowJobOutput: React.Dispatch<React.SetStateAction<Job | undefined>>;
+};
+
+export type JobOutputProps = {
+  job: Job;
+  setShowJobOutput: React.Dispatch<React.SetStateAction<Job | undefined>>;
 };
