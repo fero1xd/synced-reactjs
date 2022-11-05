@@ -3,7 +3,6 @@ import 'semantic-ui-css/semantic.min.css';
 import { User } from './utils/types';
 import { Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
-import { ToastContainer } from 'react-toastify';
 import { AnimatePresence } from 'framer-motion';
 import { defaultModalState, Modals } from './utils/types/props';
 import AuthenticatedRoute from './components/Routes/AuthenticatedRoute';
@@ -21,7 +20,7 @@ const App = () => {
   const [user, setUser] = useState<User>();
   const [modals, setModals] = useState<Modals>(defaultModalState);
   const { createProject, confirmDeletion } = modals;
-
+    
   return (
     <>
       <AppCover

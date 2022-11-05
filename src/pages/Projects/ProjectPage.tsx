@@ -41,25 +41,12 @@ const ProjectPage = () => {
   // Fetching project & getting update job mutation
   const { isLoading, project, updateProjectMutation } = useProject({ reset });
 
-  // Fetching jobs & getting creating job mutation
-  const { areJobsLoading, jobs, createJobMutation } = useJobs(project);
-
-  // Listening for onJobDone event
-  useEffect(() => {
-    if (!project) return;
-    socket.on('onJobDone', (job: Job) => {
-      const converted = convertJob(job);
-      const currentJobs = (
-        queryClient.getQueryData(['jobs', project.id.toString()]) as Job[]
-      ).filter((j) => j.id !== converted.id);
-      currentJobs.unshift(converted);
-
-      queryClient.setQueryData(['jobs', project.id.toString()], currentJobs);
-    });
-    return () => {
-      socket.off('onJobDone');
-    };
-  }, [socket, project, queryClient]);
+  // Fetching jobs & creating job mutation & setting and updating job output modal
+  const { areJobsLoading, jobs, createJobMutation } = useJobs(
+    setShowJobOutput,
+    project,
+    showJobOutput
+  );
 
   // Save project
   const saveProject = (data: ProjectInfo) => {

@@ -4,7 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import ThemeContext from '../../utils/context/ThemeContext';
 
 const ToggleTheme = () => {
-  const switchThemeClass = 'absolute top-10 right-10 w-6 h-6 cursor-pointer';
+  const switchThemeClass = 'fixed top-10 right-10 w-6 h-6 cursor-pointer';
   const { theme, setTheme } = useContext(ThemeContext);
 
   return (

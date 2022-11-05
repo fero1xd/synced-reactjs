@@ -17,12 +17,12 @@ const useQueryWithRedirect = (custom?: any) => {
     retry: false,
     onError: (err: AxiosError) => {
       const status = err.response?.status!;
-      const { message } = <{ message?: string }>err.response?.data;
+      const { message } = err.response?.data as { message?: string };
 
       if (status === 403) {
         client.clear();
         updateUser(undefined);
-        navigate('/login');
+        return navigate('/login');
       } else if (status !== 401) {
         navigate('/home');
       }

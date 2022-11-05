@@ -16,7 +16,7 @@ const AuthenticatedRoute = () => {
         socket.disconnect();
       }
     };
-  }, []);
+  }, [socket]);
 
   if (loading) return <Loader active size='big' />;
 

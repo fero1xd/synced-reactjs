@@ -1,10 +1,4 @@
-import {
-  ColorTheme,
-  Job,
-  PartialProject,
-  Project,
-  SetShowModalParams,
-} from './types';
+import { ColorTheme, Job, SetShowModalParams } from './types';
 import { Modals } from './types/props';
 
 export const toTitleCase = (str: string) => {

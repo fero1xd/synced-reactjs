@@ -1,5 +1,4 @@
 import React from 'react';
-import { ToastContainer } from 'react-toastify';
 import { AppCoverProps } from '../../utils/types/props';
 import AppProviders from './AppProviders';
 import ToggleTheme from './ToggleTheme';

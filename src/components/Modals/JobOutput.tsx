@@ -44,13 +44,13 @@ const JobOutput: React.FC<JobOutputProps> = ({ job, setShowJobOutput }) => {
             >
               Status: {status.toUpperCase()}
             </p>
-            <p className='w-full font-sCode bg-input p-5 text-gray-300 rounded-md shadow-md max-h-[300px] overflow-y-auto'>
+            <div className='w-full font-sCode bg-input p-5 text-gray-300 rounded-md shadow-md max-h-[300px] overflow-y-auto'>
               {output ? (
-                <div className='whitespace-pre-wrap	'>{output}</div>
+                <p className='whitespace-pre-wrap'>{output}</p>
               ) : (
                 'No output'
               )}
-            </p>
+            </div>
           </div>
         </div>
       </motion.div>

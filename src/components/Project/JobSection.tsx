@@ -20,7 +20,7 @@ const JobSection: React.FC<JobSectionProps> = ({
     <div className='w-full space-y-5 font-inter transition-colors duration-300 ease-in-out'>
       <h2 className='text-[22px] font-bold drop-shadow-md'>Jobs</h2>
 
-      <div className='w-full h-60 lg:h-[25rem] overflow-y-auto'>
+      <div className='w-full max-h-60 lg:max-h-[25rem] overflow-y-auto'>
         <table className='w-full bg-white dark:bg-[#151515] text-center divide-y-2 divide-[#1C1C1C] rounded-md shadow-md table-fixed border border-black dark:border-darkAccent'>
           <thead>
             <tr className='divide-x-2 divide-[#1C1C1C] opacity-[80%]'>

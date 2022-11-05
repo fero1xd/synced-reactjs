@@ -32,7 +32,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
         exit={{
           x: '100vw',
         }}
-        className='fixed transition-colors duration-200 w-[100%] h-[100%]  bg-white dark:bg-darkAccent py-10 px-5 lg:px-10  overflow-y-auto'
+        className='fixed transition-colors duration-200 top-0 left-0 right-0 bottom-0 w-[vw] h-[vh]  bg-white dark:bg-darkAccent py-10 px-5 lg:px-10  overflow-y-auto'
         style={{
           zIndex: 999,
         }}

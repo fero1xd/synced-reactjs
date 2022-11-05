@@ -149,7 +149,11 @@ export type UseJobsReturnType = {
 };
 
 export type UseProject = (data: UseProjectProps) => UseProjectReturnType;
-export type UseJobs = (project?: Project) => UseJobsReturnType;
+export type UseJobs = (
+  setShowJobOutput: React.Dispatch<React.SetStateAction<Job | undefined>>,
+  project?: Project,
+  showJobOutput?: Job
+) => UseJobsReturnType;
 
 export type JobSectionProps = {
   jobs: Job[];
