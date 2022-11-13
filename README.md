@@ -24,7 +24,7 @@ This repository is the Frontend made with ReactJs.
 Clone the project
 
 ```bash
-  git clone https://github.com/fero1xd/synced-nestjs.git
+  git clone https://github.com/fero1xd/synced-reactjs.git
 ```
 
 Go to the project directory
@@ -39,7 +39,7 @@ Install dependencies
   yarn install
 ```
 
-Start the server
+Start the client
 
 ```bash
   yarn start
