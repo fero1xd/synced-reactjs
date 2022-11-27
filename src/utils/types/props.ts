@@ -1,4 +1,5 @@
 import { UseMutationResult } from '@tanstack/react-query';
+import { AxiosResponse } from 'axios';
 import React from 'react';
 import {
   FieldErrorsImpl,
@@ -94,7 +95,7 @@ export type ContextMenuProps = {
   left: number;
   project: PartialProject;
   editProject: (project: PartialProject) => void;
-  deleteProject: (id: string) => void;
+  deleteProject: (project: PartialProject) => void;
 };
 
 export type CodeEditorProps = {
@@ -107,7 +108,7 @@ export type CodeEditorProps = {
 
 export type ProjectInfo = {
   code: string;
-  description: string;
+  description?: string;
   language: AvailableLanguages;
 };
 
@@ -122,7 +123,7 @@ export type ProjectPageLayoutProps = {
 
 export type EditDescriptionProps = {
   setValue: UseFormSetValue<ProjectInfo>;
-  description: string;
+  description?: string;
 };
 
 export type UseProjectProps = {
@@ -146,6 +147,13 @@ export type UseJobsReturnType = {
   isError: boolean;
   jobs?: Job[];
   createJobMutation: UseMutationResult<unknown, unknown, string, unknown>;
+  clearJobs: UseMutationResult<
+    AxiosResponse<any, any>,
+    unknown,
+    string,
+    unknown
+  >;
+  isClearingJobs: boolean;
 };
 
 export type UseProject = (data: UseProjectProps) => UseProjectReturnType;
@@ -181,12 +189,26 @@ export type ProjectModalProps = {
   handleClick: () => void;
   project: Project;
   setValue: UseFormSetValue<ProjectInfo>;
-  description: string;
+  description?: string;
   language: string;
   setShowJobOutput: React.Dispatch<React.SetStateAction<Job | undefined>>;
+  clearJobs: UseMutationResult<
+    AxiosResponse<any, any>,
+    unknown,
+    string,
+    unknown
+  >;
+  isClearingJobs: boolean;
 };
 
 export type JobOutputProps = {
   job: Job;
   setShowJobOutput: React.Dispatch<React.SetStateAction<Job | undefined>>;
 };
+
+export type HomeHeaderProps = {
+  isPublic: boolean;
+  setIsPublic: (val: boolean) => void;
+};
+
+export type ProjectsSectionProps = { isPublic: boolean };

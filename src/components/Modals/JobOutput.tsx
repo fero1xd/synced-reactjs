@@ -5,12 +5,15 @@ import { MdClose } from 'react-icons/md';
 
 const JobOutput: React.FC<JobOutputProps> = ({ job, setShowJobOutput }) => {
   const { id, output, status } = job;
+
   return (
     <div
       className='px-4 w-[100%] h-[100%] fixed top-0 left-0 flex items-center justify-center bg-[#d5d1d1e3] dark:bg-modal font-inter'
       style={{ zIndex: 9999 }}
+      onClick={() => setShowJobOutput(undefined)}
     >
       <motion.div
+        onClick={(e) => e.stopPropagation()}
         initial={{ opacity: 0, scale: 0.5 }}
         animate={{
           opacity: 1,
@@ -44,13 +47,13 @@ const JobOutput: React.FC<JobOutputProps> = ({ job, setShowJobOutput }) => {
             >
               Status: {status.toUpperCase()}
             </p>
-            <div className='w-full font-sCode bg-input p-5 text-gray-300 rounded-md shadow-md max-h-[300px] overflow-y-auto'>
+            <code className='w-full font-sCode bg-input p-5 text-gray-300 rounded-md shadow-md max-h-[300px] overflow-y-auto'>
               {output ? (
                 <p className='whitespace-pre-wrap'>{output}</p>
               ) : (
                 'No output'
               )}
-            </div>
+            </code>
           </div>
         </div>
       </motion.div>

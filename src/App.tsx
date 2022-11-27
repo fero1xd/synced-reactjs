@@ -1,7 +1,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 import 'semantic-ui-css/semantic.min.css';
 import { User } from './utils/types';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { defaultModalState, Modals } from './utils/types/props';
@@ -20,7 +20,7 @@ const App = () => {
   const [user, setUser] = useState<User>();
   const [modals, setModals] = useState<Modals>(defaultModalState);
   const { createProject, confirmDeletion } = modals;
-    
+
   return (
     <>
       <AppCover

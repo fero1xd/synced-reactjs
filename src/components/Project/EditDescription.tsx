@@ -13,7 +13,7 @@ const EditDescription: React.FC<EditDescriptionProps> = ({
       <div className='w-full h-[150px] bg-white dark:bg-input rounded-lg shadow-md px-7 py-6'>
         <textarea
           ref={textAreaRef}
-          value={description}
+          value={description || ''}
           maxLength={300}
           placeholder='Describe your project'
           className='placeholder:opacity-50 w-full bg-white dark:bg-input outline-none border-none h-full resize-none text-gray-400'

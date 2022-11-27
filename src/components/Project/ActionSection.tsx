@@ -11,7 +11,9 @@ const ActionSection: React.FC<ActionSectionProps> = ({
     <div className='flex gap-4 items-center justify-center ml-auto transition-all ease-in-out duration-500'>
       <Button
         className={twMerge(
-          `rounded-lg ${disabled ? 'cursor-not-allowed' : ''} `,
+          `rounded-lg ${
+            disabled ? 'cursor-not-allowed' : ''
+          } px-[35px] py-[12px]`,
           className
         )}
         onClick={createJob}

@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { AnimatePresence } from 'framer-motion';
 import { useContext, useEffect, useState } from 'react';
 import { Loader } from 'semantic-ui-react';
 import useQueryWithRedirect from '../../hooks/useQueryWithRedirect';
@@ -8,14 +9,21 @@ import { setShowModal } from '../../utils/helpers';
 import { PartialProject } from '../../utils/types';
 import ProjectCard from '../Project/ProjectCard';
 import ContextMenu from '../Shared/ContextMenu';
+import { motion } from 'framer-motion';
+import { ProjectsSectionProps } from '../../utils/types/props';
 
-const ProjectsSection = () => {
+const ProjectsSection: React.FC<ProjectsSectionProps> = ({ isPublic }) => {
   const { setModals } = useContext(ModalContext);
   const {
     isLoading,
     isError,
     data: projects,
-  } = useQuery(['projects'], getProjects, useQueryWithRedirect());
+  } = useQuery(
+    ['projects', isPublic ? 'public' : 'private'],
+    () => getProjects(isPublic),
+    useQueryWithRedirect()
+  );
+
   const [showContextMenu, setShowContextMenu] = useState(false);
   const [points, setPoints] = useState({ x: 0, y: 0 });
 
@@ -60,27 +68,37 @@ const ProjectsSection = () => {
         <h1 className='font-inter text-gray-500 tracking-wide'>No Projects!</h1>
       ) : (
         <div className='w-full flex flex-col gap-7 overflow-y-auto items-center max-h-[300px] px-4'>
-          {projects?.map((project) => (
-            <div
-              key={project.id}
-              className='w-full'
-              onContextMenu={(e) => handleContextMenu(e, project)}
-            >
-              <ProjectCard project={project} />
-            </div>
-          ))}
-
+          <AnimatePresence>
+            {projects?.map((project) => (
+              <motion.div
+                key={project.id}
+                className='w-full'
+                onContextMenu={(e) => handleContextMenu(e, project)}
+                initial={{
+                  opacity: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                }}
+                transition={{
+                  duration: 0.3,
+                }}
+              >
+                <ProjectCard project={project} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
           {showContextMenu && (
             <ContextMenu
               top={points.y}
               left={points.x}
               project={selectedProject!}
-              deleteProject={(id) => {
+              deleteProject={(project) => {
                 setShowModal({
                   setModals,
                   name: 'confirmDeletion',
                   show: true,
-                  data: id,
+                  data: project,
                 });
               }}
               editProject={(project) => {

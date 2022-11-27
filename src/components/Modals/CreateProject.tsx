@@ -58,13 +58,16 @@ const CreateProject = () => {
     (data: CreateProjectParams) => createProject(data),
     {
       onSuccess: (data: PartialProject) => {
+        console.log(data);
+
         const projects = queryClient.getQueryData([
           'projects',
+          'private',
         ]) as PartialProject[];
 
         projects.unshift(data);
 
-        queryClient.setQueryData(['projects'], projects);
+        queryClient.setQueryData(['projects', 'private'], projects);
 
         toast.success('Project Created Successfully');
 
@@ -78,12 +81,13 @@ const CreateProject = () => {
     (data: UpdateProjectParams) => updateProject(data),
     {
       onSuccess: (data: Project) => {
+        const key = ['projects', data.isPublic ? 'public' : 'private'];
         const projects = queryClient
-          .getQueryData<PartialProject[]>(['projects'])!
+          .getQueryData<PartialProject[]>(key)!
           .filter((p) => p.id !== data.id);
         projects.unshift(data);
 
-        queryClient.setQueryData(['projects'], projects);
+        queryClient.setQueryData(key, projects);
         toast.success('Project Updated Successfully');
         closeModal();
       },
@@ -191,12 +195,12 @@ const CreateProject = () => {
                   </option>
                 ))}
               </Select>
-              <div className='w-[48px] h-[48px] p-1'>
+              <div className='w-[41px] h-[41px]'>
                 {currentIcon && (
                   <img
                     src={currentIcon}
                     alt='Stock'
-                    className=' h-full'
+                    className='h-full object-contain'
                     style={{
                       aspectRatio: 16 / 9,
                     }}
@@ -235,7 +239,7 @@ const CreateProject = () => {
           </div>
           <div className='w-full flex items-center justify-center flex-col mt-10'>
             {error && <p className='text-sm text-red-500 mb-2'>{error}</p>}
-            <Button className='self-center' type='submit'>
+            <Button className='self-center font-medium' type='submit'>
               {project ? 'Save Project' : 'Create Project'}
             </Button>
           </div>

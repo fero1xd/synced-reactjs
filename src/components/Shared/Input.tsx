@@ -9,7 +9,7 @@ const Input: React.FC<InputFieldProps> = ({
   ...rest
 }) => {
   const finalClassName = twMerge(
-    'bg-white dark:bg-input shadow-md border-none outline-none py-5 px-7 placeholder:opacity-50 rounded-sm focus:outline-primaryBtnHvr transition-all ease-in-out duration-500',
+    'bg-white dark:bg-input shadow-md border border-[#e3e1e1] dark:border-darkAccent outline-none py-5 px-7 placeholder:opacity-50 rounded-sm focus:outline-primaryBtnHvr transition-all ease-in-out duration-500',
     className
   );
 

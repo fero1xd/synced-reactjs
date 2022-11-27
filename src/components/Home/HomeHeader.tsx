@@ -5,8 +5,9 @@ import Input from '../../components/Shared/Input';
 import AuthContext from '../../utils/context/AuthContext';
 import ModalContext from '../../utils/context/ModalContext';
 import { setShowModal } from '../../utils/helpers';
+import { HomeHeaderProps } from '../../utils/types/props';
 
-const HomeHeader = () => {
+const HomeHeader: React.FC<HomeHeaderProps> = ({ isPublic, setIsPublic }) => {
   const { setModals } = useContext(ModalContext);
   const { user } = useContext(AuthContext);
 
@@ -36,11 +37,31 @@ const HomeHeader = () => {
         </Button>
       </div>
 
-      <div className='mt-10 w-full flex items-center justify-center gap-6 px-4 flex-shrink-0'>
+      <div className='mt-8 w-full flex items-center justify-center gap-6 px-4 flex-shrink-0'>
         <Input placeholder='Search' className='w-full  rounded-xl' />
         <FaSearch className='w-9 h-9' cursor='pointer' />
       </div>
-      <div className='w-full mt-16 mb-16 dark:border-[#1E1E1E] border-[.2px]'></div>
+
+      <div className='w-full mt-12 mb-12 flex justify-center flex-col items-center'>
+        <div className='flex gap-5 font-inria text-lg mb-3 font-normal tracking-wide'>
+          <p
+            className={`p-2 cursor-pointer border-b-2 ${
+              !isPublic ? 'border-blue-600' : 'border-transparent'
+            }  hover:border-blue-600 transition-all duration-200`}
+            onClick={() => setIsPublic(false)}
+          >
+            Private
+          </p>
+          <p
+            className={`p-2 border-b-2 ${
+              isPublic ? 'border-red-600' : 'border-transparent'
+            }  hover:border-red-600 cursor-pointer transition-all duration-200`}
+            onClick={() => setIsPublic(true)}
+          >
+            Public
+          </p>
+        </div>
+      </div>
     </>
   );
 };

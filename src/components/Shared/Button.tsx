@@ -15,7 +15,7 @@ const Button: React.FC<ButtonProps> = ({
         : 'bg-primaryBtn disabled:bg-blue-800'
     } font-semibold px-14 py-4 rounded-md flex items-center relative text-white ${
       secondary ? 'hover:bg-red-800' : 'hover:bg-primaryBtnHvr'
-    } transition-colors duration-700 drop-shadow-lg`,
+    } transition-colors duration-700 drop-shadow-lg font-medium`,
     className
   );
 

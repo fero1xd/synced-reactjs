@@ -1,8 +1,8 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Loader } from 'semantic-ui-react';
 import { RiLogoutCircleFill } from 'react-icons/ri';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import { Job, JobStatus } from '../../utils/types';
+import { Job, JobStatus, Project } from '../../utils/types';
 import { ProjectInfo } from '../../utils/types/props';
 import ProjectPageLayout from '../../components/Project/ProjectPageLayout';
 import EditDescription from '../../components/Project/EditDescription';
@@ -11,20 +11,15 @@ import useProject from '../../hooks/useProject';
 import { useForm } from 'react-hook-form';
 import SaveProject from '../../components/Project/SaveProject';
 import { AnimatePresence } from 'framer-motion';
-import { useQueryClient } from '@tanstack/react-query';
 import JobSection from '../../components/Project/JobSection';
-import { useContext, useEffect, useState } from 'react';
-import { SocketContext } from '../../utils/context/SocketContext';
+import { useState } from 'react';
 import ProjectHeader from '../../components/Project/ProjectHeader';
 import ProjectModal from '../../components/Modals/ProjectModal';
-import { convertJob } from '../../utils/helpers';
 import useJobs from '../../hooks/useJobs';
 import JobOutput from '../../components/Modals/JobOutput';
 
 const ProjectPage = () => {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const socket = useContext(SocketContext);
   const [showOverlay, setShowOverlay] = useState(false);
   const [showJobOutput, setShowJobOutput] = useState<Job>();
 
@@ -42,11 +37,8 @@ const ProjectPage = () => {
   const { isLoading, project, updateProjectMutation } = useProject({ reset });
 
   // Fetching jobs & creating job mutation & setting and updating job output modal
-  const { areJobsLoading, jobs, createJobMutation } = useJobs(
-    setShowJobOutput,
-    project,
-    showJobOutput
-  );
+  const { areJobsLoading, jobs, createJobMutation, clearJobs, isClearingJobs } =
+    useJobs(setShowJobOutput, project, showJobOutput);
 
   // Save project
   const saveProject = (data: ProjectInfo) => {
@@ -106,6 +98,8 @@ const ProjectPage = () => {
               description={description}
               language={language}
               setShowJobOutput={setShowJobOutput}
+              clearJobs={clearJobs}
+              isClearingJobs={isClearingJobs}
             />
           )}
         </AnimatePresence>

@@ -22,11 +22,13 @@ const ConfirmationModal = () => {
 
   const mutation = useMutation((id: string) => deleteProject(id), {
     onSuccess: (_, id) => {
-      const data = queryClient.getQueryData(['projects']) as PartialProject[];
+      const key = ['projects', data.isPublic ? 'public' : 'private'];
+
+      const projects = queryClient.getQueryData(key) as PartialProject[];
 
       queryClient.setQueryData(
-        ['projects'],
-        data.filter((pr) => pr.id.toString() !== id)
+        key,
+        projects.filter((pr) => pr.id.toString() !== id)
       );
     },
     ...useQueryWithRedirect(),
@@ -60,7 +62,7 @@ const ConfirmationModal = () => {
             <Button
               className='px-5 py-2'
               onClick={() => {
-                mutation.mutateAsync(data);
+                mutation.mutateAsync(data.id.toString());
                 closeModal();
               }}
             >

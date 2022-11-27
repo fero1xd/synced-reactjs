@@ -26,9 +26,9 @@ export const postLoginUser = (data: UserCredentialParams) =>
 
 export const getUser = () => axiosClient.get<User>('/auth/status', config);
 
-export const getProjects = () =>
+export const getProjects = (isPublic: boolean) =>
   axiosClient
-    .get<PartialProject[]>('/projects', config)
+    .get<PartialProject[]>(`/projects/${isPublic ? 'public' : ''}`, config)
     .then((res) => res.data);
 
 export const getProject = (id: string) =>
@@ -55,3 +55,6 @@ export const createJob = (id: string) =>
 
 export const getAllJobs = (id: string) =>
   axiosClient.get<Job[]>(`/jobs/${id}`, config).then((res) => res.data);
+
+export const clearJobs = (projectId: string) =>
+  axiosClient.delete(`/jobs/${projectId}/clear`, config);

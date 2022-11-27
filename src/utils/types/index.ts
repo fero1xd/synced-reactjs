@@ -17,21 +17,25 @@ export type User = {
 };
 
 export enum AvailableLanguages {
-  JAVASCRIPT = 'javascript',
   PYTHON = 'python',
+  JAVASCRIPT = 'javascript',
   JAVA = 'java',
+  CPP = 'cpp',
 }
 
 export type PartialProject = {
   id: number;
   name: string;
   language: AvailableLanguages;
+  isPublic: boolean;
   description?: string;
+  collaborators: User[];
   createdAt: Date;
   updatedAt: Date;
 };
 
 export type Project = PartialProject & {
+  owner: User;
   code: string;
 };
 

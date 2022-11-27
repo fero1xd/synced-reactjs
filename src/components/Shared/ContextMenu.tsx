@@ -33,7 +33,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
         </li>
         <li
           className='p-3 cursor-pointer text-red-500 hover:bg-[#d8d8d8] dark:hover:bg-[#4b4b4b] rounded-md'
-          onClick={() => deleteProject(project.id.toString())}
+          onClick={() => deleteProject(project)}
         >
           Delete
         </li>

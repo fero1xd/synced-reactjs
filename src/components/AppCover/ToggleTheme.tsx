@@ -23,7 +23,12 @@ const ToggleTheme = () => {
           onClick={() => setTheme('dark')}
         />
       )}
-      <ToastContainer theme={theme} position='bottom-center' limit={2} />
+      <ToastContainer
+        theme={theme}
+        position='bottom-center'
+        limit={2}
+        draggable
+      />
     </>
   );
 };

@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useContext, useEffect } from 'react';
-import { getAllJobs, createJob } from '../utils/api';
+import { getAllJobs, createJob, clearJobs as clearJobsApi } from '../utils/api';
 import { SocketContext } from '../utils/context/SocketContext';
 import { convertJob } from '../utils/helpers';
-import { Job, Project } from '../utils/types';
+import { Job, JobStatus, Project } from '../utils/types';
 import { UseJobs } from '../utils/types/props';
 import useQueryWithRedirect from './useQueryWithRedirect';
 
@@ -42,13 +42,24 @@ const useJobs: UseJobs = (
   // Create job mutation
   const createJobMutation = useMutation((id: string) => createJob(id), {
     onSuccess: (data: Job) => {
-      const converted = convertJob(data);
-      const currentJobs = (
-        queryClient.getQueryData(['jobs', project?.id.toString()]) as Job[]
-      ).filter((j) => j.id !== converted.id);
-      currentJobs.unshift(converted);
+      // const converted = convertJob(data);
+      // const currentJobs = (
+      //   queryClient.getQueryData(['jobs', project?.id.toString()]) as Job[]
+      // ).filter((j) => j.id !== converted.id);
+      // currentJobs.unshift(converted);
+      // queryClient.setQueryData(['jobs', project?.id.toString()], currentJobs);
+    },
+    ...useQueryWithRedirect(),
+  });
 
-      queryClient.setQueryData(['jobs', project?.id.toString()], currentJobs);
+  // Clear Jobs mutation
+  const clearJobs = useMutation((id: string) => clearJobsApi(id), {
+    onSuccess: () => {
+      const key = ['jobs', project?.id.toString()];
+      const filtered = (queryClient.getQueryData(key) as Job[]).filter(
+        (j) => j.status === JobStatus.PENDING
+      );
+      queryClient.setQueryData(key, filtered);
     },
     ...useQueryWithRedirect(),
   });
@@ -66,14 +77,39 @@ const useJobs: UseJobs = (
 
       if (showJobOutput && showJobOutput.id === converted.id) {
         setShowJobOutput(converted);
+      } else if (!showJobOutput) {
+        setShowJobOutput(converted);
       }
+    });
+
+    socket.on('onJobCreate', (job: Job) => {
+      const converted = convertJob(job);
+      console.log('onJobCreate');
+
+      const currentJobs = queryClient.getQueryData([
+        'jobs',
+        project.id.toString(),
+      ]) as Job[];
+
+      currentJobs.unshift(converted);
+      console.log(['jobs', project.id.toString()]);
+
+      queryClient.setQueryData(['jobs', project.id.toString()], currentJobs);
     });
     return () => {
       socket.off('onJobDone');
+      socket.off('onJobCreate');
     };
-  }, [socket, project, queryClient, showJobOutput]);
+  }, [socket, project, queryClient, showJobOutput, setShowJobOutput]);
 
-  return { areJobsLoading, isError, jobs, createJobMutation };
+  return {
+    areJobsLoading,
+    isError,
+    jobs,
+    createJobMutation,
+    clearJobs,
+    isClearingJobs: clearJobs.isLoading,
+  };
 };
 
 export default useJobs;

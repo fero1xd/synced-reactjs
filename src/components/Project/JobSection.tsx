@@ -21,9 +21,9 @@ const JobSection: React.FC<JobSectionProps> = ({
       <h2 className='text-[22px] font-bold drop-shadow-md'>Jobs</h2>
 
       <div className='w-full max-h-60 lg:max-h-[25rem] overflow-y-auto'>
-        <table className='w-full bg-white dark:bg-[#151515] text-center divide-y-2 divide-[#1C1C1C] rounded-md shadow-md table-fixed border border-black dark:border-darkAccent'>
+        <table className='w-full bg-white dark:bg-[#151515] text-center divide-y-2 divide-[#e3e1e1] dark:divide-[#1C1C1C] rounded-md shadow-md table-fixed border-2 border-[#e3e1e1] dark:border-darkAccent'>
           <thead>
-            <tr className='divide-x-2 divide-[#1C1C1C] opacity-[80%]'>
+            <tr className='divide-x-2 divide-[#e3e1e1] dark:divide-[#1C1C1C] opacity-[80%]'>
               <th className={thClassname}>Id</th>
 
               <th className={thClassname}>
@@ -43,10 +43,10 @@ const JobSection: React.FC<JobSectionProps> = ({
 
           {jobs.length ? (
             <>
-              <tbody className='divide-y-2 divide-[#1C1C1C]'>
+              <tbody className='divide-y-2 divide-[#e3e1e1] dark:divide-[#1C1C1C]'>
                 {jobs.map((job) => (
                   <tr
-                    className='divide-x-2 divide-[#1C1C1C] opacity-[80%] cursor-pointer'
+                    className='divide-x-2 divide-[#e3e1e1] dark:divide-[#1C1C1C] opacity-[80%] cursor-pointer'
                     key={job.id}
                     onClick={() => setShowJobOutput(job)}
                   >
@@ -77,7 +77,7 @@ const JobSection: React.FC<JobSectionProps> = ({
                   </tr>
                 ))}
                 {showSeeAll && (
-                  <tr className='text-center divide-x-2 divide-[#1C1C1C] opacity-[80%]'>
+                  <tr className='text-center divide-x-2 divide-[#1C1C1C] dark:divide-[#1C1C1C] opacity-[80%]'>
                     <td
                       className={twMerge(
                         tdClassname,
@@ -93,8 +93,8 @@ const JobSection: React.FC<JobSectionProps> = ({
               </tbody>
             </>
           ) : (
-            <tbody className='divide-y-2 divide-[#1C1C1C]'>
-              <tr className='text-center divide-x-2 divide-[#1C1C1C] opacity-[80%]'>
+            <tbody className='divide-y-2 divide-[#1C1C1C] dark:divide-[#1C1C1C]'>
+              <tr className='text-center divide-x-2 divide-[#1C1C1C] dark:divide-[#1C1C1C] opacity-[80%]'>
                 <td
                   className={twMerge(
                     tdClassname,
