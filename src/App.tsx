@@ -1,7 +1,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 import 'semantic-ui-css/semantic.min.css';
 import { User } from './utils/types';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { defaultModalState, Modals } from './utils/types/props';
@@ -14,12 +14,14 @@ import Home from './pages/Home';
 import PublicRoute from './components/Routes/PublicRoute';
 import ProjectPage from './pages/Projects/ProjectPage';
 import CreateProject from './components/Modals/CreateProject';
-import ConfirmationModal from './components/Modals/ConfirmationModal';
+import ProjectDeleteConfirmation from './components/Modals/Project/ProjectDeleteConfirmation';
+import OwnershipTransfer from './components/Modals/Project/OwnershipTransfer';
 
 const App = () => {
   const [user, setUser] = useState<User>();
   const [modals, setModals] = useState<Modals>(defaultModalState);
-  const { createProject, confirmDeletion } = modals;
+  const { createProject, projectDeleteConfirmation, projectOwnershipTransfer } =
+    modals;
 
   return (
     <>
@@ -31,7 +33,8 @@ const App = () => {
       >
         <AnimatePresence>
           {createProject.show && <CreateProject />}
-          {confirmDeletion.show && <ConfirmationModal />}
+          {projectDeleteConfirmation.show && <ProjectDeleteConfirmation />}
+          {projectOwnershipTransfer.show && <OwnershipTransfer />}
         </AnimatePresence>
         <Routes>
           <Route element={<PublicRoute />}>

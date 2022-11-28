@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import { useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProject, updateProject } from '../utils/api';
@@ -7,7 +8,7 @@ import { Project, UpdateProjectParams } from '../utils/types';
 import { UseProject } from '../utils/types/props';
 import useQueryWithRedirect from './useQueryWithRedirect';
 
-const useProject: UseProject = ({ reset }) => {
+const useProject: UseProject = ({ reset, setValue }) => {
   const params = useParams();
   const queryClient = useQueryClient();
   const socket = useContext(SocketContext);
@@ -33,7 +34,22 @@ const useProject: UseProject = ({ reset }) => {
 
   const updateProjectMutation = useMutation(
     (data: UpdateProjectParams) => updateProject(data),
-    useQueryWithRedirect()
+    {
+      onSuccess: (data: Project) => {
+        queryClient.setQueryData(['projects', data.id.toString()], project);
+        reset({
+          code: data.code,
+          description: data.description,
+          language: data.language,
+        });
+      },
+      ...useQueryWithRedirect(null, (err) => {
+        const status = err.response?.status!;
+        if (status === 401) {
+          reset();
+        }
+      }),
+    }
   );
 
   useEffect(() => {

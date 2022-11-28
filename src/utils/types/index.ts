@@ -29,13 +29,13 @@ export type PartialProject = {
   language: AvailableLanguages;
   isPublic: boolean;
   description?: string;
+  owner: User;
   collaborators: User[];
   createdAt: Date;
   updatedAt: Date;
 };
 
 export type Project = PartialProject & {
-  owner: User;
   code: string;
 };
 

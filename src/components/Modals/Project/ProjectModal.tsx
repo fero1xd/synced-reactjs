@@ -1,14 +1,15 @@
 import { motion } from 'framer-motion';
 import { MdClose } from 'react-icons/md';
-import { toTitleCase } from '../../utils/helpers';
-import { AvailableLanguages } from '../../utils/types';
-import { ProjectModalProps } from '../../utils/types/props';
-import ActionSection from '../Project/ActionSection';
-import EditDescription from '../Project/EditDescription';
-import JobSection from '../Project/JobSection';
-import Select from '../Shared/Select';
+import { toTitleCase } from '../../../utils/helpers';
+import { AvailableLanguages } from '../../../utils/types';
+import { ProjectModalProps } from '../../../utils/types/props';
+import ActionSection from '../../Project/ActionSection';
+import EditDescription from '../../Project/EditDescription';
+import JobSection from '../../Project/JobSection';
+import Select from '../../Shared/Select';
 import { useEffect } from 'react';
-import Button from '../Shared/Button';
+import Button from '../../Shared/Button';
+import Collaborators from './Collaborators';
 
 const ProjectModal: React.FC<ProjectModalProps> = ({
   createJob,
@@ -80,13 +81,16 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
             </Select>
           </div>
 
-          <JobSection
-            jobs={jobs ?? []}
-            showSeeAll={false}
-            compact={true}
-            setShowJobOutput={setShowJobOutput}
-          />
+          <div className='w-full flex flex-col justify-center gap-5 lg:gap-10'>
+            <Collaborators project={project} />
 
+            <JobSection
+              jobs={jobs ?? []}
+              showSeeAll={false}
+              compact={true}
+              setShowJobOutput={setShowJobOutput}
+            />
+          </div>
           <div className='w-full lg:hidden'>
             <EditDescription setValue={setValue} description={description} />
           </div>

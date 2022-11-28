@@ -61,7 +61,7 @@ export const setShowModal = (params: SetShowModalParams) => {
   const { setModals, name, show, data } = params;
   setModals((prev: Modals) => ({
     ...prev,
-    [name]: { show, data: data || undefined },
+    [name]: { show, data: data || {} },
   }));
 };
 

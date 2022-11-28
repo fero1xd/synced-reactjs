@@ -8,9 +8,9 @@ import ModalContext from '../../utils/context/ModalContext';
 import { setShowModal } from '../../utils/helpers';
 import { PartialProject } from '../../utils/types';
 import ProjectCard from '../Project/ProjectCard';
-import ContextMenu from '../Shared/ContextMenu';
 import { motion } from 'framer-motion';
 import { ProjectsSectionProps } from '../../utils/types/props';
+import ProjectContextMenu from '../Shared/ContextMenu/ProjectContextMenu';
 
 const ProjectsSection: React.FC<ProjectsSectionProps> = ({ isPublic }) => {
   const { setModals } = useContext(ModalContext);
@@ -89,16 +89,16 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ isPublic }) => {
             ))}
           </AnimatePresence>
           {showContextMenu && (
-            <ContextMenu
+            <ProjectContextMenu
               top={points.y}
               left={points.x}
               project={selectedProject!}
               deleteProject={(project) => {
                 setShowModal({
                   setModals,
-                  name: 'confirmDeletion',
+                  name: 'projectDeleteConfirmation',
                   show: true,
-                  data: project,
+                  data: { project },
                 });
               }}
               editProject={(project) => {

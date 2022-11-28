@@ -66,8 +66,7 @@ export type AppProvidersProps = {
 };
 
 export type Modals = {
-  createProject: ModalData;
-  confirmDeletion: ModalData;
+  [x: string]: ModalData;
 };
 
 export type ModalData = {
@@ -79,7 +78,10 @@ export const defaultModalState: Modals = {
   createProject: {
     show: false,
   },
-  confirmDeletion: {
+  projectDeleteConfirmation: {
+    show: false,
+  },
+  projectOwnershipTransfer: {
     show: false,
   },
 };
@@ -93,9 +95,22 @@ export type ProjectCardProps = {
 export type ContextMenuProps = {
   top: number;
   left: number;
+  children: React.ReactNode;
+  className?: ClassNameValue;
+};
+
+export type ProjectContextMenuProps = {
+  top: number;
+  left: number;
   project: PartialProject;
-  editProject: (project: PartialProject) => void;
   deleteProject: (project: PartialProject) => void;
+  editProject: (project: PartialProject) => void;
+};
+
+export type ContextMenuItemProps = {
+  children: React.ReactNode;
+  onClick?: () => void;
+  className?: ClassNameValue;
 };
 
 export type CodeEditorProps = {
@@ -104,6 +119,7 @@ export type CodeEditorProps = {
   setValue: UseFormSetValue<ProjectInfo>;
   isDirty: boolean;
   saveProject: () => void;
+  project: Project;
 };
 
 export type ProjectInfo = {
@@ -119,6 +135,7 @@ export type ProjectPageLayoutProps = {
   setValue: UseFormSetValue<ProjectInfo>;
   isDirty: boolean;
   saveProject: () => void;
+  project: Project;
 };
 
 export type EditDescriptionProps = {
@@ -128,6 +145,7 @@ export type EditDescriptionProps = {
 
 export type UseProjectProps = {
   reset: UseFormReset<ProjectInfo>;
+  setValue: UseFormSetValue<ProjectInfo>;
 };
 
 export type UseProjectReturnType = {
@@ -212,3 +230,13 @@ export type HomeHeaderProps = {
 };
 
 export type ProjectsSectionProps = { isPublic: boolean };
+
+export type CollaboratorsProps = {
+  project: Project;
+};
+
+export type ConfirmationModalProps = {
+  children: React.ReactNode;
+  handleConfirm: () => void;
+  handleCancelation: () => void;
+};

@@ -1087,6 +1087,13 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@convergencelabs/monaco-collab-ext@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@convergencelabs/monaco-collab-ext/-/monaco-collab-ext-0.4.0.tgz#cd0a04b26e2a03886f4a85f0901d03965bc4d7ff"
+  integrity sha512-X4Eo9OoGf10NgQk+H1Hd136SZbEMxPym4KzF1Ehu8Ec+PBAYjBwGVuEz5qo/hhrXaeqEkg2fPtQ6E2PASmaRGw==
+  dependencies:
+    monaco-editor ">=0.15.6"
+
 "@csstools/normalize.css@*":
   version "12.0.0"
   resolved "https://registry.npmjs.org/@csstools/normalize.css/-/normalize.css-12.0.0.tgz"
@@ -6450,7 +6457,7 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-monaco-editor@^0.34.1:
+monaco-editor@>=0.15.6, monaco-editor@^0.34.1:
   version "0.34.1"
   resolved "https://registry.yarnpkg.com/monaco-editor/-/monaco-editor-0.34.1.tgz#1b75c4ad6bc4c1f9da656d740d98e0b850a22f87"
   integrity sha512-FKc80TyiMaruhJKKPz5SpJPIjL+dflGvz4CpuThaPMc94AyN7SeC9HQ8hrvaxX7EyHdJcUY5i4D0gNyJj1vSZQ==

@@ -11,16 +11,18 @@ const JobSection: React.FC<JobSectionProps> = ({
   setShowJobOutput,
 }) => {
   const thClassname =
-    'py-3 text-xs lg:text-sm text-black dark:text-[#bcbcbc] font-semibold tracking-wide text-center';
+    'py-5 text-xs lg:text-sm text-black dark:text-[#bcbcbc] font-semibold tracking-wide text-center';
 
   const tdClassname =
-    'py-3 text-black dark:text-[#A8A8A8] font-medium text-center text-xs lg:text-sm';
+    'py-4 text-black dark:text-[#A8A8A8] font-medium text-center text-xs lg:text-sm';
 
   return (
     <div className='w-full space-y-5 font-inter transition-colors duration-300 ease-in-out'>
-      <h2 className='text-[22px] font-bold drop-shadow-md'>Jobs</h2>
+      <h2 className='text-[18px] lg:text-[20px] font-bold drop-shadow-md'>
+        Jobs
+      </h2>
 
-      <div className='w-full max-h-60 lg:max-h-[25rem] overflow-y-auto'>
+      <div className='w-full max-h-60 lg:max-h-[35rem] overflow-y-auto'>
         <table className='w-full bg-white dark:bg-[#151515] text-center divide-y-2 divide-[#e3e1e1] dark:divide-[#1C1C1C] rounded-md shadow-md table-fixed border-2 border-[#e3e1e1] dark:border-darkAccent'>
           <thead>
             <tr className='divide-x-2 divide-[#e3e1e1] dark:divide-[#1C1C1C] opacity-[80%]'>

@@ -7,7 +7,10 @@ import { Modals } from '../utils/types/props';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-const useQueryWithRedirect = (custom?: any) => {
+const useQueryWithRedirect = (
+  custom?: any,
+  handleOnError?: (err: AxiosError) => void
+) => {
   const navigate = useNavigate();
   const { updateUser } = useContext(AuthContext);
   const { setModals } = useContext(ModalContext);
@@ -43,6 +46,8 @@ const useQueryWithRedirect = (custom?: any) => {
           ...n,
         };
       });
+
+      if (handleOnError) handleOnError(err);
     },
     ...custom,
   };

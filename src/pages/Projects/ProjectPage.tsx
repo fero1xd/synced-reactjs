@@ -1,8 +1,8 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Loader } from 'semantic-ui-react';
 import { RiLogoutCircleFill } from 'react-icons/ri';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import { Job, JobStatus, Project } from '../../utils/types';
+import { AvailableLanguages, Job, JobStatus } from '../../utils/types';
 import { ProjectInfo } from '../../utils/types/props';
 import ProjectPageLayout from '../../components/Project/ProjectPageLayout';
 import EditDescription from '../../components/Project/EditDescription';
@@ -14,7 +14,7 @@ import { AnimatePresence } from 'framer-motion';
 import JobSection from '../../components/Project/JobSection';
 import { useState } from 'react';
 import ProjectHeader from '../../components/Project/ProjectHeader';
-import ProjectModal from '../../components/Modals/ProjectModal';
+import ProjectModal from '../../components/Modals/Project/ProjectModal';
 import useJobs from '../../hooks/useJobs';
 import JobOutput from '../../components/Modals/JobOutput';
 
@@ -31,10 +31,13 @@ const ProjectPage = () => {
 
   // Extracting state from form hook
   const { code, language, description } = watch();
-  const { errors, isDirty } = formState;
+  const { errors, isDirty, dirtyFields } = formState;
 
   // Fetching project & getting update job mutation
-  const { isLoading, project, updateProjectMutation } = useProject({ reset });
+  const { isLoading, project, updateProjectMutation } = useProject({
+    reset,
+    setValue,
+  });
 
   // Fetching jobs & creating job mutation & setting and updating job output modal
   const { areJobsLoading, jobs, createJobMutation, clearJobs, isClearingJobs } =
@@ -44,7 +47,20 @@ const ProjectPage = () => {
   const saveProject = (data: ProjectInfo) => {
     // If form fields are actually changed
     if (!isDirty) return;
-    updateProjectMutation.mutateAsync({ id: project!.id.toString(), ...data });
+    const fields: {
+      code?: string;
+      description?: string;
+      language?: AvailableLanguages;
+    } = {};
+
+    if (dirtyFields.code) fields.code = data.code;
+    if (dirtyFields.description) fields.description = data.description;
+    if (dirtyFields.language) fields.language = data.language;
+
+    updateProjectMutation.mutateAsync({
+      id: project!.id.toString(),
+      ...fields,
+    });
   };
 
   // Create job
@@ -52,6 +68,15 @@ const ProjectPage = () => {
     if (!project) return;
     createJobMutation.mutateAsync(project.id.toString());
   };
+
+  // useEffect(() => {
+  //   if (!socket) return;
+
+  //   socket.emit('onCodeUpdate', {
+  //     projectId: project?.id,
+  //     code,
+  //   });
+  // }, [socket, code]);
 
   // isLoading: wether project is loading
   // project: The project
@@ -74,6 +99,7 @@ const ProjectPage = () => {
         language={language}
         setValue={setValue}
         isDirty={isDirty}
+        project={project}
       >
         <GiHamburgerMenu
           className='w-7 h-7 fixed lg:hidden right-24 top-10'

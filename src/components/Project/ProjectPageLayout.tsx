@@ -8,6 +8,7 @@ const ProjectPageLayout: React.FC<ProjectPageLayoutProps> = ({
   setValue,
   isDirty,
   saveProject,
+  project,
 }) => {
   return (
     <div className='h-screen flex items-center justify-between font-inter'>
@@ -15,6 +16,7 @@ const ProjectPageLayout: React.FC<ProjectPageLayoutProps> = ({
         <CodeEditor
           saveProject={saveProject}
           code={code}
+          project={project}
           language={language}
           setValue={setValue}
           isDirty={isDirty}

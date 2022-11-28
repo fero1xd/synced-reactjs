@@ -42,12 +42,14 @@ const useJobs: UseJobs = (
   // Create job mutation
   const createJobMutation = useMutation((id: string) => createJob(id), {
     onSuccess: (data: Job) => {
-      // const converted = convertJob(data);
-      // const currentJobs = (
-      //   queryClient.getQueryData(['jobs', project?.id.toString()]) as Job[]
-      // ).filter((j) => j.id !== converted.id);
-      // currentJobs.unshift(converted);
-      // queryClient.setQueryData(['jobs', project?.id.toString()], currentJobs);
+      if (project?.isPublic) return;
+
+      const converted = convertJob(data);
+      const currentJobs = (
+        queryClient.getQueryData(['jobs', project?.id.toString()]) as Job[]
+      ).filter((j) => j.id !== converted.id);
+      currentJobs.unshift(converted);
+      queryClient.setQueryData(['jobs', project?.id.toString()], currentJobs);
     },
     ...useQueryWithRedirect(),
   });
