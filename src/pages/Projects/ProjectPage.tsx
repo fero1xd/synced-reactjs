@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { Loader } from 'semantic-ui-react';
 import { RiLogoutCircleFill } from 'react-icons/ri';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import { AvailableLanguages, Job, JobStatus } from '../../utils/types';
+import { Job, JobStatus } from '../../utils/types';
 import { ProjectInfo } from '../../utils/types/props';
 import ProjectPageLayout from '../../components/Project/ProjectPageLayout';
 import EditDescription from '../../components/Project/EditDescription';
@@ -17,6 +17,7 @@ import ProjectHeader from '../../components/Project/ProjectHeader';
 import ProjectModal from '../../components/Modals/Project/ProjectModal';
 import useJobs from '../../hooks/useJobs';
 import JobOutput from '../../components/Modals/JobOutput';
+import { getDirtyFields } from '../../utils/helpers';
 
 const ProjectPage = () => {
   const navigate = useNavigate();
@@ -36,7 +37,9 @@ const ProjectPage = () => {
   // Fetching project & getting update job mutation
   const { isLoading, project, updateProjectMutation } = useProject({
     reset,
-    setValue,
+    code,
+    language,
+    description,
   });
 
   // Fetching jobs & creating job mutation & setting and updating job output modal
@@ -47,15 +50,8 @@ const ProjectPage = () => {
   const saveProject = (data: ProjectInfo) => {
     // If form fields are actually changed
     if (!isDirty) return;
-    const fields: {
-      code?: string;
-      description?: string;
-      language?: AvailableLanguages;
-    } = {};
 
-    if (dirtyFields.code) fields.code = data.code;
-    if (dirtyFields.description) fields.description = data.description;
-    if (dirtyFields.language) fields.language = data.language;
+    const fields = getDirtyFields(dirtyFields, data);
 
     updateProjectMutation.mutateAsync({
       id: project!.id.toString(),
@@ -69,15 +65,6 @@ const ProjectPage = () => {
     createJobMutation.mutateAsync(project.id.toString());
   };
 
-  // useEffect(() => {
-  //   if (!socket) return;
-
-  //   socket.emit('onCodeUpdate', {
-  //     projectId: project?.id,
-  //     code,
-  //   });
-  // }, [socket, code]);
-
   // isLoading: wether project is loading
   // project: The project
   // areJobsLoading: wether last job is loading
@@ -86,7 +73,7 @@ const ProjectPage = () => {
 
   return (
     <>
-      <AnimatePresence>
+      <AnimatePresence key={project.id + 1}>
         {isDirty && <SaveProject handleSubmit={handleSubmit(saveProject)} />}
         {showJobOutput && (
           <JobOutput job={showJobOutput} setShowJobOutput={setShowJobOutput} />

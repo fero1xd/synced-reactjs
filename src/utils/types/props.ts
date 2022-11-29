@@ -6,6 +6,7 @@ import {
   FieldValues,
   UseFormRegister,
   UseFormReset,
+  UseFormResetField,
   UseFormSetValue,
 } from 'react-hook-form';
 import { ClassNameValue } from 'tailwind-merge/dist/lib/join';
@@ -15,6 +16,7 @@ import {
   Job,
   PartialProject,
   Project,
+  TransferOwnershipParams,
   UpdateProjectParams,
   User,
 } from '.';
@@ -145,7 +147,9 @@ export type EditDescriptionProps = {
 
 export type UseProjectProps = {
   reset: UseFormReset<ProjectInfo>;
-  setValue: UseFormSetValue<ProjectInfo>;
+  code: string;
+  language: AvailableLanguages;
+  description?: string;
 };
 
 export type UseProjectReturnType = {
@@ -165,6 +169,7 @@ export type UseJobsReturnType = {
   isError: boolean;
   jobs?: Job[];
   createJobMutation: UseMutationResult<unknown, unknown, string, unknown>;
+
   clearJobs: UseMutationResult<
     AxiosResponse<any, any>,
     unknown,

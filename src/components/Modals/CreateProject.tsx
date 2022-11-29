@@ -18,7 +18,12 @@ import { toast } from 'react-toastify';
 import useQueryWithRedirect from '../../hooks/useQueryWithRedirect';
 import { motion } from 'framer-motion';
 import Select from '../Shared/Select';
-import { setShowModal, toTitleCase } from '../../utils/helpers';
+import {
+  getDirtyFields,
+  mergeObject,
+  setShowModal,
+  toTitleCase,
+} from '../../utils/helpers';
 
 const CreateProject = () => {
   const {
@@ -27,14 +32,14 @@ const CreateProject = () => {
       createProject: { data },
     },
   } = useContext(ModalContext);
-  const project = data as PartialProject;
+  const { project } = data as { project: PartialProject };
 
   const queryClient = useQueryClient();
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors, isDirty, dirtyFields },
     getValues,
   } = useForm<CreateProjectParams>({
     reValidateMode: 'onBlur',
@@ -58,8 +63,6 @@ const CreateProject = () => {
     (data: CreateProjectParams) => createProject(data),
     {
       onSuccess: (data: PartialProject) => {
-        console.log(data);
-
         const projects = queryClient.getQueryData([
           'projects',
           'private',
@@ -80,12 +83,16 @@ const CreateProject = () => {
   const updateMutation = useMutation(
     (data: UpdateProjectParams) => updateProject(data),
     {
-      onSuccess: (data: Project) => {
-        const key = ['projects', data.isPublic ? 'public' : 'private'];
-        const projects = queryClient
-          .getQueryData<PartialProject[]>(key)!
-          .filter((p) => p.id !== data.id);
-        projects.unshift(data);
+      onSuccess: (data: Partial<Project>) => {
+        const key = ['projects', project.isPublic ? 'public' : 'private'];
+
+        let projects = queryClient.getQueryData<PartialProject[]>(key)!;
+
+        const old = projects.find((p) => p.id === data.id);
+        const updated = mergeObject(old, data);
+        projects = projects.filter((p) => p.id !== data.id);
+
+        projects.unshift(updated);
 
         queryClient.setQueryData(key, projects);
         toast.success('Project Updated Successfully');
@@ -100,7 +107,10 @@ const CreateProject = () => {
       createMutation.mutateAsync(data);
     } else {
       if (!isDirty) return setError('No Update Seen');
-      updateMutation.mutateAsync({ id: project.id.toString(), ...data });
+
+      const fields = getDirtyFields(dirtyFields, data);
+
+      updateMutation.mutateAsync({ id: project.id.toString(), ...fields });
     }
   };
 

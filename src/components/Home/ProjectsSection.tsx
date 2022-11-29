@@ -106,7 +106,7 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({ isPublic }) => {
                   setModals,
                   name: 'createProject',
                   show: true,
-                  data: project,
+                  data: { project },
                 });
               }}
             />

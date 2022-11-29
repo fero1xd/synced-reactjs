@@ -1,14 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
 import { useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProject, updateProject } from '../utils/api';
 import { SocketContext } from '../utils/context/SocketContext';
+import { mergeObject } from '../utils/helpers';
 import { Project, UpdateProjectParams } from '../utils/types';
 import { UseProject } from '../utils/types/props';
 import useQueryWithRedirect from './useQueryWithRedirect';
 
-const useProject: UseProject = ({ reset, setValue }) => {
+const useProject: UseProject = ({ reset, code, description, language }) => {
   const params = useParams();
   const queryClient = useQueryClient();
   const socket = useContext(SocketContext);
@@ -32,17 +32,23 @@ const useProject: UseProject = ({ reset, setValue }) => {
     })
   );
 
+  const updateProjectHelper = (data: Partial<Project>) => {
+    const key = ['projects', data.id!.toString()];
+    const project = queryClient.getQueryData(key) as Project;
+    const merged = mergeObject(project, data);
+    queryClient.setQueryData(key, merged);
+
+    reset({
+      code: data.code || code,
+      language: data.language || language,
+      description: data.description || description,
+    });
+  };
+
   const updateProjectMutation = useMutation(
     (data: UpdateProjectParams) => updateProject(data),
     {
-      onSuccess: (data: Project) => {
-        queryClient.setQueryData(['projects', data.id.toString()], project);
-        reset({
-          code: data.code,
-          description: data.description,
-          language: data.language,
-        });
-      },
+      onSuccess: updateProjectHelper,
       ...useQueryWithRedirect(null, (err) => {
         const status = err.response?.status!;
         if (status === 401) {
@@ -57,14 +63,7 @@ const useProject: UseProject = ({ reset, setValue }) => {
       const projectId = project.id;
       socket.emit('onProjectJoin', { projectId });
 
-      socket.on('onProjectUpdate', (project: Project) => {
-        queryClient.setQueryData(['projects', project.id.toString()], project);
-        reset({
-          code: project.code,
-          description: project.description,
-          language: project.language,
-        });
-      });
+      socket.on('onProjectUpdate', updateProjectHelper);
     }
     return () => {
       if (project) {
@@ -74,7 +73,12 @@ const useProject: UseProject = ({ reset, setValue }) => {
     };
   }, [socket, project]);
 
-  return { isLoading, project, isError, updateProjectMutation };
+  return {
+    isLoading,
+    project,
+    isError,
+    updateProjectMutation,
+  };
 };
 
 export default useProject;

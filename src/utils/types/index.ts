@@ -53,6 +53,11 @@ export type UpdateProjectParams = {
   code?: string;
 };
 
+export type TransferOwnershipParams = {
+  projectId: string;
+  userToTransferEmail: string;
+};
+
 export enum JobStatus {
   PENDING = 'pending',
   SUCCESS = 'success',

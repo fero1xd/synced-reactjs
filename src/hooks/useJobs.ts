@@ -39,18 +39,18 @@ const useJobs: UseJobs = (
     })
   );
 
+  const addJobHelper = (job: Job) => {
+    const converted = convertJob(job);
+    const currentJobs = (
+      queryClient.getQueryData(['jobs', project?.id.toString()]) as Job[]
+    ).filter((j) => j.id !== converted.id);
+    currentJobs.unshift(converted);
+    queryClient.setQueryData(['jobs', project?.id.toString()], currentJobs);
+  };
+
   // Create job mutation
   const createJobMutation = useMutation((id: string) => createJob(id), {
-    onSuccess: (data: Job) => {
-      if (project?.isPublic) return;
-
-      const converted = convertJob(data);
-      const currentJobs = (
-        queryClient.getQueryData(['jobs', project?.id.toString()]) as Job[]
-      ).filter((j) => j.id !== converted.id);
-      currentJobs.unshift(converted);
-      queryClient.setQueryData(['jobs', project?.id.toString()], currentJobs);
-    },
+    onSuccess: addJobHelper,
     ...useQueryWithRedirect(),
   });
 
@@ -71,11 +71,7 @@ const useJobs: UseJobs = (
     if (!project) return;
     socket.on('onJobDone', (job: Job) => {
       const converted = convertJob(job);
-      const currentJobs = (
-        queryClient.getQueryData(['jobs', project.id.toString()]) as Job[]
-      ).filter((j) => j.id !== converted.id);
-      currentJobs.unshift(converted);
-      queryClient.setQueryData(['jobs', project.id.toString()], currentJobs);
+      addJobHelper(job);
 
       if (showJobOutput && showJobOutput.id === converted.id) {
         setShowJobOutput(converted);
@@ -84,20 +80,7 @@ const useJobs: UseJobs = (
       }
     });
 
-    socket.on('onJobCreate', (job: Job) => {
-      const converted = convertJob(job);
-      console.log('onJobCreate');
-
-      const currentJobs = queryClient.getQueryData([
-        'jobs',
-        project.id.toString(),
-      ]) as Job[];
-
-      currentJobs.unshift(converted);
-      console.log(['jobs', project.id.toString()]);
-
-      queryClient.setQueryData(['jobs', project.id.toString()], currentJobs);
-    });
+    socket.on('onJobCreate', addJobHelper);
     return () => {
       socket.off('onJobDone');
       socket.off('onJobCreate');

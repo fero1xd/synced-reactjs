@@ -7,6 +7,26 @@ export const toTitleCase = (str: string) => {
   });
 };
 
+export const mergeObject = (A: any, B: any) => {
+  let res: any = {};
+  Object.keys({ ...A, ...B }).map((key) => {
+    res[key] = B[key] || A[key];
+  });
+  return res;
+};
+
+export const getDirtyFields = (
+  dirtyFields: Partial<Readonly<any>>,
+  data: any
+) => {
+  const fields: any = {};
+
+  for (const key of Object.keys(dirtyFields)) {
+    fields[key] = data[key];
+  }
+  return fields;
+};
+
 const padTo2Digits = (num: number) => {
   return num.toString().padStart(2, '0');
 };

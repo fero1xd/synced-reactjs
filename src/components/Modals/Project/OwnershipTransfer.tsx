@@ -1,7 +1,15 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useContext } from 'react';
+import { toast } from 'react-toastify';
+import { transferOwnership } from '../../../utils/api';
 import ModalContext from '../../../utils/context/ModalContext';
-import { setShowModal } from '../../../utils/helpers';
-import { PartialProject, User } from '../../../utils/types';
+import { mergeObject, setShowModal } from '../../../utils/helpers';
+import {
+  PartialProject,
+  Project,
+  TransferOwnershipParams,
+  User,
+} from '../../../utils/types';
 import ConfirmationModal from '../ConfirmationModal';
 
 const OwnershipTransfer = () => {
@@ -11,18 +19,39 @@ const OwnershipTransfer = () => {
       projectOwnershipTransfer: { data },
     },
   } = useContext(ModalContext);
+  const queryClient = useQueryClient();
 
   const { project, selectedCollaborator } = data as {
     project: PartialProject;
     selectedCollaborator: User;
   };
 
-  console.log(project, selectedCollaborator);
+  const transferOwnershipMutation = useMutation(
+    (data: TransferOwnershipParams) => transferOwnership(data),
+    {
+      onSuccess: (data: Partial<Project>) => {
+        const key = ['projects', data.id!.toString()];
+        const project = queryClient.getQueryData(key) as Project;
+        queryClient.setQueryData(key, mergeObject(project, data));
+        toast.warning('Ownership Transfered !');
+      },
+    }
+  );
+
+  const handleConfirm = () => {
+    transferOwnershipMutation.mutateAsync({
+      projectId: project.id.toString(),
+      userToTransferEmail: selectedCollaborator.email,
+    });
+    closeModal();
+  };
+
   const closeModal = () =>
     setShowModal({ setModals, name: 'projectOwnershipTransfer', show: false });
+
   return (
     <ConfirmationModal
-      handleConfirm={closeModal}
+      handleConfirm={handleConfirm}
       handleCancelation={closeModal}
     >
       Transfer Project Ownership to <span className='text-red-400'>John?</span>
