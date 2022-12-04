@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useContext, useEffect } from 'react';
 import { getAllJobs, createJob, clearJobs as clearJobsApi } from '../utils/api';
+import AuthContext from '../utils/context/AuthContext';
 import { SocketContext } from '../utils/context/SocketContext';
 import { convertJob } from '../utils/helpers';
 import { Job, JobStatus, Project } from '../utils/types';
@@ -14,6 +15,7 @@ const useJobs: UseJobs = (
 ) => {
   const queryClient = useQueryClient();
   const socket = useContext(SocketContext);
+  const { user } = useContext(AuthContext);
 
   // Getting all jobs
   const {
@@ -73,6 +75,7 @@ const useJobs: UseJobs = (
       const converted = convertJob(job);
       addJobHelper(job);
 
+      if (job.executedBy.id !== user?.id) return;
       if (showJobOutput && showJobOutput.id === converted.id) {
         setShowJobOutput(converted);
       } else if (!showJobOutput) {

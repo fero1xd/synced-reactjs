@@ -46,6 +46,8 @@ const ProjectPage = () => {
   const { areJobsLoading, jobs, createJobMutation, clearJobs, isClearingJobs } =
     useJobs(setShowJobOutput, project, showJobOutput);
 
+  const firstJob = jobs ? jobs[0] : null;
+
   // Save project
   const saveProject = (data: ProjectInfo) => {
     // If form fields are actually changed
@@ -130,7 +132,7 @@ const ProjectPage = () => {
             />
 
             <JobSection
-              jobs={jobs?.length ? [jobs[0]] : []}
+              jobs={firstJob ? [firstJob] : []}
               showSeeAll={true}
               onClick={() => setShowOverlay(true)}
               setShowJobOutput={setShowJobOutput}

@@ -16,12 +16,17 @@ import ProjectPage from './pages/Projects/ProjectPage';
 import CreateProject from './components/Modals/CreateProject';
 import ProjectDeleteConfirmation from './components/Modals/Project/ProjectDeleteConfirmation';
 import OwnershipTransfer from './components/Modals/Project/OwnershipTransfer';
+import CollaboratorRemove from './components/Modals/Project/CollaboratorRemove';
 
 const App = () => {
   const [user, setUser] = useState<User>();
   const [modals, setModals] = useState<Modals>(defaultModalState);
-  const { createProject, projectDeleteConfirmation, projectOwnershipTransfer } =
-    modals;
+  const {
+    createProject,
+    projectDeleteConfirmation,
+    projectOwnershipTransfer,
+    projectCollaboratorRemove,
+  } = modals;
 
   return (
     <>
@@ -35,6 +40,7 @@ const App = () => {
           {createProject.show && <CreateProject />}
           {projectDeleteConfirmation.show && <ProjectDeleteConfirmation />}
           {projectOwnershipTransfer.show && <OwnershipTransfer />}
+          {projectCollaboratorRemove.show && <CollaboratorRemove />}
         </AnimatePresence>
         <Routes>
           <Route element={<PublicRoute />}>

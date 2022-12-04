@@ -107,7 +107,7 @@ const LoginForm = () => {
               {showPassword ? (
                 <>
                   <FaEye
-                    className='absolute right-0 top-5 mr-4 h-5 w-5 cursor-pointer drop-shadow-md'
+                    className='absolute right-0 top-6 mr-4 h-5 w-5 cursor-pointer drop-shadow-md'
                     onClick={() => {
                       setShowPassword((prev) => !prev);
                     }}
@@ -116,7 +116,7 @@ const LoginForm = () => {
               ) : (
                 <>
                   <FaEyeSlash
-                    className='absolute right-0 top-5 mr-4 h-5 w-5 cursor-pointer drop-shadow-md'
+                    className='absolute right-0 top-6 mr-4 h-5 w-5 cursor-pointer drop-shadow-md'
                     onClick={() => {
                       setShowPassword((prev) => !prev);
                     }}

@@ -101,7 +101,20 @@ const Collaborators: React.FC<CollaboratorsProps> = ({ project }) => {
               Make Owner
             </ContextMenuItem>
 
-            <ContextMenuItem className='text-red-500'>
+            <ContextMenuItem
+              className='text-red-500'
+              onClick={() => {
+                setShowModal({
+                  setModals,
+                  name: 'projectCollaboratorRemove',
+                  show: true,
+                  data: {
+                    project,
+                    selectedCollaborator,
+                  },
+                });
+              }}
+            >
               Remove From Project
             </ContextMenuItem>
           </ContextMenu>

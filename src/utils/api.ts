@@ -5,6 +5,7 @@ import {
   Job,
   PartialProject,
   Project,
+  RemoveCollaboratorParams,
   TransferOwnershipParams,
   UpdateProjectParams,
   User,
@@ -48,7 +49,12 @@ export const updateProject = (data: UpdateProjectParams) =>
 
 export const transferOwnership = (data: TransferOwnershipParams) =>
   axiosClient
-    .patch<Partial<User>>('/projects/transfer', data, config)
+    .patch<Partial<Project>>('/projects/transfer', data, config)
+    .then((res) => res.data);
+
+export const removeCollaborator = (data: RemoveCollaboratorParams) =>
+  axiosClient
+    .patch<Partial<Project>>('/projects/collaborator/remove', data, config)
     .then((res) => res.data);
 
 export const getLatestJob = (id: string) =>

@@ -86,6 +86,9 @@ export const defaultModalState: Modals = {
   projectOwnershipTransfer: {
     show: false,
   },
+  projectCollaboratorRemove: {
+    show: false,
+  },
 };
 
 export type AppCoverProps = AppProvidersProps;

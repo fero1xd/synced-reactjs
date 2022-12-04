@@ -21,10 +21,8 @@ const OwnershipTransfer = () => {
   } = useContext(ModalContext);
   const queryClient = useQueryClient();
 
-  const { project, selectedCollaborator } = data as {
-    project: PartialProject;
-    selectedCollaborator: User;
-  };
+  const project = data?.project as Project;
+  const selectedCollaborator = data?.selectedCollaborator as User;
 
   const transferOwnershipMutation = useMutation(
     (data: TransferOwnershipParams) => transferOwnership(data),
@@ -47,14 +45,20 @@ const OwnershipTransfer = () => {
   };
 
   const closeModal = () =>
-    setShowModal({ setModals, name: 'projectOwnershipTransfer', show: false });
+    setShowModal({
+      setModals,
+      name: 'projectOwnershipTransfer',
+      show: false,
+      data,
+    });
 
   return (
     <ConfirmationModal
       handleConfirm={handleConfirm}
       handleCancelation={closeModal}
     >
-      Transfer Project Ownership to <span className='text-red-400'>John?</span>
+      Transfer Project Ownership to{' '}
+      <span className='text-red-400'>{selectedCollaborator.name}?</span>
     </ConfirmationModal>
   );
 };

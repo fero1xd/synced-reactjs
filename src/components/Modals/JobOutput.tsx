@@ -4,7 +4,7 @@ import { JobStatus } from '../../utils/types';
 import { MdClose } from 'react-icons/md';
 
 const JobOutput: React.FC<JobOutputProps> = ({ job, setShowJobOutput }) => {
-  const { id, output, status } = job;
+  const { id, output, status, executedBy } = job;
 
   return (
     <div
@@ -35,18 +35,21 @@ const JobOutput: React.FC<JobOutputProps> = ({ job, setShowJobOutput }) => {
             </div>
           </div>
 
-          <div className='w-full flex flex-col gap-3'>
-            <p
-              className={`text-gray-500 ${
-                status === JobStatus.PENDING
-                  ? 'text-gray-500'
-                  : status === JobStatus.ERROR
-                  ? 'text-red-500'
-                  : 'text-green-500'
-              }`}
-            >
-              Status: {status.toUpperCase()}
-            </p>
+          <div className='w-full flex flex-col gap-5'>
+            <div className='space-y-1'>
+              <p
+                className={`text-gray-500 ${
+                  status === JobStatus.PENDING
+                    ? 'text-gray-500'
+                    : status === JobStatus.ERROR
+                    ? 'text-red-500'
+                    : 'text-green-500'
+                }`}
+              >
+                Status: {status.toUpperCase()}
+              </p>
+              <p className='text-gray-400'>Executed By - {executedBy.name}</p>
+            </div>
             <code className='w-full font-sCode bg-input p-5 text-gray-300 rounded-md shadow-md max-h-[300px] overflow-y-auto'>
               {output ? (
                 <p className='whitespace-pre-wrap'>{output}</p>

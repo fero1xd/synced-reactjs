@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { getProject, updateProject } from '../utils/api';
 import { SocketContext } from '../utils/context/SocketContext';
 import { mergeObject } from '../utils/helpers';
@@ -12,6 +13,7 @@ const useProject: UseProject = ({ reset, code, description, language }) => {
   const params = useParams();
   const queryClient = useQueryClient();
   const socket = useContext(SocketContext);
+  const navigate = useNavigate();
 
   const {
     isLoading,
@@ -64,12 +66,22 @@ const useProject: UseProject = ({ reset, code, description, language }) => {
       socket.emit('onProjectJoin', { projectId });
 
       socket.on('onProjectUpdate', updateProjectHelper);
+
+      socket.on('onRemoved', (data: { projectId: number }) => {
+        console.log('onRemoved');
+        const { projectId } = data;
+        if (projectId === project.id) {
+          navigate('/home');
+          toast.error('You have been removed from this project !');
+        }
+      });
     }
     return () => {
       if (project) {
         socket.emit('onProjectLeave', { projectId: project.id });
       }
       socket.off('onProjectUpdate');
+      socket.off('onRemoved');
     };
   }, [socket, project]);
 

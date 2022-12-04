@@ -4,7 +4,7 @@ import useQueryWithRedirect from '../../../hooks/useQueryWithRedirect';
 import { deleteProject } from '../../../utils/api';
 import ModalContext from '../../../utils/context/ModalContext';
 import { setShowModal } from '../../../utils/helpers';
-import { PartialProject } from '../../../utils/types';
+import { PartialProject, Project } from '../../../utils/types';
 import ConfirmationModal from '../ConfirmationModal';
 
 const ProjectDeleteConfirmation = () => {
@@ -15,8 +15,7 @@ const ProjectDeleteConfirmation = () => {
     },
   } = useContext(ModalContext);
 
-  const { project } = data as { project: PartialProject };
-
+  const project = data?.project as Project;
   const queryClient = useQueryClient();
 
   const closeModal = () =>
@@ -38,7 +37,7 @@ const ProjectDeleteConfirmation = () => {
 
   return (
     <ConfirmationModal
-      handleConfirm={() => {
+      handleConfirm={async () => {
         deleteProjectMutation.mutateAsync(project.id.toString());
         closeModal();
       }}

@@ -57,6 +57,10 @@ export type TransferOwnershipParams = {
   projectId: string;
   userToTransferEmail: string;
 };
+export type RemoveCollaboratorParams = {
+  projectId: number;
+  userToRemoveEmail: string;
+};
 
 export enum JobStatus {
   PENDING = 'pending',
@@ -68,6 +72,7 @@ export type Job = {
   id: string;
   submittedAt: Date;
   status: JobStatus;
+  executedBy: User;
   output?: string;
   startedAt?: Date;
   compiledAt?: Date;
