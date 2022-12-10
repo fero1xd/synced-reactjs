@@ -6,7 +6,6 @@ import {
   FieldValues,
   UseFormRegister,
   UseFormReset,
-  UseFormResetField,
   UseFormSetValue,
 } from 'react-hook-form';
 import { ClassNameValue } from 'tailwind-merge/dist/lib/join';
@@ -16,7 +15,6 @@ import {
   Job,
   PartialProject,
   Project,
-  TransferOwnershipParams,
   UpdateProjectParams,
   User,
 } from '.';
@@ -201,6 +199,8 @@ export type ActionSectionProps = {
   createJob: () => void;
   disabled: boolean;
   className?: ClassNameValue;
+  setShowOverlay?: React.Dispatch<React.SetStateAction<boolean>>;
+  showSettings?: boolean;
 };
 
 export type ProjectHeaderProps = {
@@ -241,10 +241,15 @@ export type ProjectsSectionProps = { isPublic: boolean };
 
 export type CollaboratorsProps = {
   project: Project;
+  isModal?: boolean;
 };
 
 export type ConfirmationModalProps = {
   children: React.ReactNode;
   handleConfirm: () => void;
   handleCancelation: () => void;
+};
+
+export type CollaboratorsSectionProps = {
+  collaborators: User[];
 };

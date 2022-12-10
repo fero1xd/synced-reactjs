@@ -1,7 +1,10 @@
 import { useContext } from 'react';
-import { FaDotCircle, FaSearch } from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
+import { RiLogoutCircleFill } from 'react-icons/ri';
+import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Shared/Button';
 import Input from '../../components/Shared/Input';
+import { logout } from '../../utils/api';
 import AuthContext from '../../utils/context/AuthContext';
 import ModalContext from '../../utils/context/ModalContext';
 import { setShowModal } from '../../utils/helpers';
@@ -9,7 +12,20 @@ import { HomeHeaderProps } from '../../utils/types/props';
 
 const HomeHeader: React.FC<HomeHeaderProps> = ({ isPublic, setIsPublic }) => {
   const { setModals } = useContext(ModalContext);
-  const { user } = useContext(AuthContext);
+  const { user, updateUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const logoutUser = async () => {
+    try {
+      await logout();
+      updateUser(undefined);
+
+      console.log('logged out');
+      navigate('/');
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <>
@@ -32,8 +48,9 @@ const HomeHeader: React.FC<HomeHeaderProps> = ({ isPublic, setIsPublic }) => {
         <Button
           secondary
           className='px-6 rounded-md flex items-center justify-center'
+          onClick={logoutUser}
         >
-          <FaDotCircle className='w-6 h-6' />
+          <RiLogoutCircleFill className='w-6 h-6' />
         </Button>
       </div>
 

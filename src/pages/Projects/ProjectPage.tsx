@@ -18,6 +18,7 @@ import ProjectModal from '../../components/Modals/Project/ProjectModal';
 import useJobs from '../../hooks/useJobs';
 import JobOutput from '../../components/Modals/JobOutput';
 import { getDirtyFields } from '../../utils/helpers';
+import Collaborators from '../../components/Modals/Project/Collaborators';
 
 const ProjectPage = () => {
   const navigate = useNavigate();
@@ -131,6 +132,7 @@ const ProjectPage = () => {
               project={project}
             />
 
+            {project.isPublic && <Collaborators project={project} />}
             <JobSection
               jobs={firstJob ? [firstJob] : []}
               showSeeAll={true}
@@ -138,18 +140,18 @@ const ProjectPage = () => {
               setShowJobOutput={setShowJobOutput}
             />
 
-            <div className='flex flex-col items-center justify-center gap-4 w-full'>
-              <EditDescription setValue={setValue} description={description} />
-              <ActionSection
-                createJob={createJob}
-                disabled={
-                  createJobMutation.isLoading ||
-                  (jobs
-                    ? jobs.some((j) => j.status === JobStatus.PENDING)
-                    : false)
-                }
-              />
-            </div>
+            <EditDescription setValue={setValue} description={description} />
+            <ActionSection
+              createJob={createJob}
+              setShowOverlay={setShowOverlay}
+              disabled={
+                createJobMutation.isLoading ||
+                (jobs
+                  ? jobs.some((j) => j.status === JobStatus.PENDING)
+                  : false)
+              }
+              showSettings
+            />
           </div>
         </div>
       </ProjectPageLayout>

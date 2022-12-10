@@ -49,7 +49,7 @@ export const updateProject = (data: UpdateProjectParams) =>
 
 export const transferOwnership = (data: TransferOwnershipParams) =>
   axiosClient
-    .patch<Partial<Project>>('/projects/transfer', data, config)
+    .post<Partial<Project>>('/projects/transfer', data, config)
     .then((res) => res.data);
 
 export const removeCollaborator = (data: RemoveCollaboratorParams) =>
@@ -70,3 +70,8 @@ export const getAllJobs = (id: string) =>
 
 export const clearJobs = (projectId: string) =>
   axiosClient.delete(`/jobs/${projectId}/clear`, config);
+
+export const getDeveloper = (id: string) =>
+  axiosClient.get<User>(`/users/${id}`, config).then((res) => res.data);
+
+export const logout = () => axiosClient.get('/auth/logout', config);

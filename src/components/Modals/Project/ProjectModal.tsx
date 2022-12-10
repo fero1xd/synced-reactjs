@@ -10,6 +10,7 @@ import Select from '../../Shared/Select';
 import { useEffect } from 'react';
 import Button from '../../Shared/Button';
 import Collaborators from './Collaborators';
+import Settings from '../../Project/Settings';
 
 const ProjectModal: React.FC<ProjectModalProps> = ({
   createJob,
@@ -81,26 +82,20 @@ const ProjectModal: React.FC<ProjectModalProps> = ({
             </Select>
           </div>
 
-          <div className='w-full flex flex-col justify-center gap-5 lg:gap-10'>
-            <Collaborators project={project} />
+          <Collaborators project={project} isModal />
 
-            <JobSection
-              jobs={jobs ?? []}
-              showSeeAll={false}
-              compact={true}
-              setShowJobOutput={setShowJobOutput}
-            />
-          </div>
-          <div className='w-full lg:hidden'>
-            <EditDescription setValue={setValue} description={description} />
-          </div>
+          <JobSection
+            jobs={jobs ?? []}
+            showSeeAll={false}
+            compact={true}
+            setShowJobOutput={setShowJobOutput}
+          />
+
+          {/* <Settings /> */}
+          <EditDescription setValue={setValue} description={description} />
 
           <div className='flex gap-3'>
-            <ActionSection
-              createJob={createJob}
-              disabled={disabled}
-              className=''
-            />
+            <ActionSection createJob={createJob} disabled={disabled} />
             <Button
               secondary
               className={`rounded-lg ${

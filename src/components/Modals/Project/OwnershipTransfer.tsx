@@ -4,12 +4,7 @@ import { toast } from 'react-toastify';
 import { transferOwnership } from '../../../utils/api';
 import ModalContext from '../../../utils/context/ModalContext';
 import { mergeObject, setShowModal } from '../../../utils/helpers';
-import {
-  PartialProject,
-  Project,
-  TransferOwnershipParams,
-  User,
-} from '../../../utils/types';
+import { Project, TransferOwnershipParams, User } from '../../../utils/types';
 import ConfirmationModal from '../ConfirmationModal';
 
 const OwnershipTransfer = () => {
@@ -37,6 +32,8 @@ const OwnershipTransfer = () => {
   );
 
   const handleConfirm = () => {
+    console.log(project);
+    console.log(selectedCollaborator);
     transferOwnershipMutation.mutateAsync({
       projectId: project.id.toString(),
       userToTransferEmail: selectedCollaborator.email,

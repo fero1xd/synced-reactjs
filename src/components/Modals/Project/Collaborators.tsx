@@ -9,7 +9,7 @@ import AuthContext from '../../../utils/context/AuthContext';
 import { setShowModal } from '../../../utils/helpers';
 import ModalContext from '../../../utils/context/ModalContext';
 
-const Collaborators: React.FC<CollaboratorsProps> = ({ project }) => {
+const Collaborators: React.FC<CollaboratorsProps> = ({ project, isModal }) => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const { setModals } = useContext(ModalContext);
@@ -43,48 +43,59 @@ const Collaborators: React.FC<CollaboratorsProps> = ({ project }) => {
     };
   }, []);
 
-  const samplePics = [
-    'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61',
-    'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde',
-  ];
+  const maxHeight = isModal
+    ? 'max-h-[150px]'
+    : 'md:max-h-[100px] lg:max-h-[100px]';
+
   return (
-    <div className='space-y-5 mb-5'>
-      <h2 className='text-[18px] lg:text-[20px] font-bold drop-shadow-md'>
+    <div className='space-y-3 w-full'>
+      <h2 className='text-[18px] lg:text-[20px] font-bold drop-shadow-md text-gray-200'>
         Collaborators
       </h2>
 
-      <div className='w-full max-h-[150px] bg-white dark:bg-input rounded-lg shadow-sm flex flex-col'>
-        {project.collaborators.map((collaborator, i) => (
-          <div
-            key={collaborator.id}
-            onContextMenu={(e) => handleContextMenu(e, collaborator)}
-            className='flex items-center gap-4 hover:bg-[#f8f7f7] dark:hover:bg-darkAccent px-7 py-6 cursor-pointer transition-all duration-200 ease-in-out'
-            onClick={() => {
-              navigate(`/developer/${collaborator.id}`);
-            }}
-          >
-            <img
-              className='w-7 h-7 lg:w-10 lg:h-10 rounded-full object-cover'
-              src={samplePics[i]}
-              alt='Photo'
-            />
-            <div className='flex items-center gap-2'>
-              {collaborator.id === project.owner.id && (
-                <FaCrown fill='#FFD700' className='w-5 h-5' />
-              )}
-              <div className='flex items-center gap-1'>
-                <h3 className='font-medium font-inter text-md lg:text-[15px]'>
-                  {collaborator.name}
-                </h3>
-                {collaborator.id === user!.id && (
-                  <p className='text-gray-400 text-sm italic'>(Me)</p>
+      <div
+        className={`w-full bg-white dark:bg-input rounded-lg shadow-sm flex flex-col ${maxHeight} ${
+          isModal ? 'overflow-y-auto' : 'overflow-hidden'
+        }`}
+      >
+        {project.collaborators.map((collaborator) => {
+          return (
+            <div
+              key={collaborator.id}
+              onContextMenu={(e) => handleContextMenu(e, collaborator)}
+              className='border-b border-[#1C1C1C]  flex items-center gap-4 hover:bg-[#f8f7f7] dark:hover:bg-darkAccent px-7 py-6 cursor-pointer transition-all duration-200 ease-in-out'
+              onClick={() => {
+                navigate(`/developer/${collaborator.id}`);
+              }}
+            >
+              <div className='flex items-center gap-2 justify-between w-full'>
+                <div className='flex items-center gap-1'>
+                  {collaborator.id === project.owner.id && (
+                    <FaCrown fill='#FFD700' className='w-5 h-5 mr-2' />
+                  )}
+                  <h3 className='font-medium font-inter text-md lg:text-[15px]'>
+                    {collaborator.name}
+                  </h3>
+                  {collaborator.id === user!.id && (
+                    <p className='text-gray-400 text-sm italic'>(Me)</p>
+                  )}
+                </div>
+
+                {collaborator.id !== user!.id && (
+                  <div className='flex gap-2'>
+                    <FaCrown className='hidden hover:block w-5 h-5 mr-2' />
+                  </div>
                 )}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         {showContextMenu && (
-          <ContextMenu top={points.y} left={points.x} className='w-[200px]'>
+          <ContextMenu
+            top={points.y}
+            left={points.x}
+            className='w-[200px] z-50'
+          >
             <ContextMenuItem
               onClick={() => {
                 setShowModal({

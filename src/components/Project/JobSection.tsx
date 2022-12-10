@@ -17,8 +17,8 @@ const JobSection: React.FC<JobSectionProps> = ({
     'py-4 text-black dark:text-[#A8A8A8] font-medium text-center text-xs lg:text-sm';
 
   return (
-    <div className='w-full space-y-5 font-inter transition-colors duration-300 ease-in-out'>
-      <h2 className='text-[18px] lg:text-[20px] font-bold drop-shadow-md'>
+    <div className='w-full space-y-3 font-inter transition-colors duration-300 ease-in-out'>
+      <h2 className='text-[18px] lg:text-[20px] font-bold drop-shadow-md text-gray-200'>
         Jobs
       </h2>
 

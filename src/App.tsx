@@ -17,6 +17,7 @@ import CreateProject from './components/Modals/CreateProject';
 import ProjectDeleteConfirmation from './components/Modals/Project/ProjectDeleteConfirmation';
 import OwnershipTransfer from './components/Modals/Project/OwnershipTransfer';
 import CollaboratorRemove from './components/Modals/Project/CollaboratorRemove';
+import Developer from './pages/Developer';
 
 const App = () => {
   const [user, setUser] = useState<User>();
@@ -52,6 +53,7 @@ const App = () => {
           <Route element={<AuthenticatedRoute />}>
             <Route path='/home' element={<Home />} />
             <Route path='/project/:id' element={<ProjectPage />} />
+            <Route path='/developer/:id' element={<Developer />} />
           </Route>
         </Routes>
       </AppCover>

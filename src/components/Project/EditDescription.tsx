@@ -8,8 +8,8 @@ const EditDescription: React.FC<EditDescriptionProps> = ({
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   return (
-    <div className='w-full space-y-5 mb-10'>
-      <h2 className='text-[18px] lg:text-[20px] font-bold drop-shadow-md'>
+    <div className='w-full space-y-3 mb-0'>
+      <h2 className='text-[18px] lg:text-[20px] font-bold drop-shadow-md text-gray-200'>
         Description
       </h2>
       <div className='w-full h-[150px] bg-white dark:bg-input rounded-lg shadow-md px-7 py-6'>

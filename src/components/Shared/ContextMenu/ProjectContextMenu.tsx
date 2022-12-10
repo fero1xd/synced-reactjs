@@ -21,16 +21,18 @@ const ProjectContextMenu: React.FC<ProjectContextMenuProps> = ({
         View
       </ContextMenuItem>
       {project.owner.id === user?.id && (
-        <ContextMenuItem onClick={() => editProject(project)}>
-          Edit
-        </ContextMenuItem>
+        <>
+          <ContextMenuItem onClick={() => editProject(project)}>
+            Edit
+          </ContextMenuItem>
+          <ContextMenuItem
+            className=' text-red-500'
+            onClick={() => deleteProject(project)}
+          >
+            Delete
+          </ContextMenuItem>
+        </>
       )}
-      <ContextMenuItem
-        className=' text-red-500'
-        onClick={() => deleteProject(project)}
-      >
-        Delete
-      </ContextMenuItem>
     </ContextMenu>
   );
 };
