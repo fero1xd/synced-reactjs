@@ -50,7 +50,7 @@ Start the client
 
 ![Home Screen](https://cdn-fero.tk/synced/home.png)
 
-![Project Screen](https://cdn-fero.tk/sycned/project.png)
+![Project Screen](https://cdn-fero.tk/synced/project.png)
 
 ## License
 
